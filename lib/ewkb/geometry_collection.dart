@@ -1,0 +1,58 @@
+import 'dart:typed_data';
+
+import 'package:buffer/buffer.dart';
+
+import 'byte_order.dart';
+import 'geometry.dart';
+import 'geometry_type.dart';
+import 'line_string.dart';
+
+class GeometryCollection extends Geometry {
+  final List<Geometry> geometry;
+
+  GeometryCollection(int? SRID, this.geometry, bool hasZ, bool hasM)
+      : super(SRID, GeometryType.geometryCollection, hasZ, hasM);
+
+  factory GeometryCollection.read(
+      int? SRID, ByteDataReader reader, bool hasZ, bool hasM) {
+    final length = reader.readUint32();
+    return GeometryCollection(
+      SRID,
+      List.generate(length, (i) => Geometry.read(SRID, reader, hasZ, hasM)),
+      hasZ,
+      hasM,
+    );
+  }
+
+  @override
+  Uint8List toBytes(ByteOrder byteOrder) {
+    final bytes = ByteDataWriter(endian: byteOrder.endian);
+    bytes.writeUint32(geometry.length);
+    for (final ring in geometry) {
+      bytes.write(ring.toBytes(byteOrder));
+    }
+    return bytes.toBytes();
+  }
+
+  @override
+  String toString() {
+    final buffer = StringBuffer('GEOMETRYCOLLECTION ');
+    if (hasZ) {
+      buffer.write('Z');
+    }
+    if (hasM) {
+      buffer.write('M');
+    }
+
+    if (hasZ || hasM) {
+      buffer.write(' ');
+    }
+
+    buffer.write(toText());
+    return buffer.toString();
+  }
+
+  String toText() {
+    return '(${geometry.map((e) => e.toString()).join(', ')})';
+  }
+}

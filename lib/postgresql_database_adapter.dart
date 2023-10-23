@@ -124,7 +124,7 @@ class PostgreSQLDatabaseAdapter
   PostgresqlDataType findType(DataField field) {
     return _typeRegistry.firstOrNullWhere((e) => field.type == e.baseType) ??
         (throw PersistenceException(
-            'No type factory registered for ${field.type} in adapter.'));
+            'No type registered for ${field.type} in adapter.'));
   }
 
   @override

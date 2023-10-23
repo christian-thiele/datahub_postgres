@@ -1,8 +1,7 @@
 import 'package:datahub/datahub.dart';
 import 'package:datahub/test.dart';
 import 'package:datahub_postgres/datahub_postgres.dart';
-import 'package:datahub_postgres/postgresql_data_types.dart';
-import 'package:datahub_postgres/wkb/wkb.dart';
+import 'package:datahub_postgres/ewkb/ewkb.dart';
 import 'package:test/test.dart';
 
 import 'lib/custom_field/custom_field_schema.dart';
@@ -26,12 +25,10 @@ void main() {
   group('Persistence', () {
     test('Repository (PostgreSQL)', host.test(() async {
       final repo = resolve<CRUDRepository<TextEntry, int>>();
-      await repo.create(TextEntry(
-          text: 'hello whats up',
-          author: 'me',
-          position: Point(4326, 11, 51, 0, 0)));
       final thingy = await repo.getAll();
-      print(thingy.length);
+      for (var element in thingy) {
+        print(element.position);
+      }
     }), timeout: Timeout.none);
   });
 }

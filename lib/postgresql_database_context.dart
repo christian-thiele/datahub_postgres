@@ -4,6 +4,7 @@ import 'package:datahub/persistence.dart';
 import 'package:postgres/postgres.dart' as postgres;
 
 import 'postgresql_database_adapter.dart';
+import 'postgresql_query_result.dart';
 import 'sql/param_sql.dart';
 import 'sql/sql.dart';
 
@@ -59,7 +60,8 @@ class PostgreSQLDatabaseContext implements DatabaseContext {
         return null;
       }
 
-      return QueryResult(
+      return PostgresqlQueryResult(
+        _adapter,
         e.key,
         values,
       );

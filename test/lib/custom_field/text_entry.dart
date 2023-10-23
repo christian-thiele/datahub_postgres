@@ -1,6 +1,6 @@
 import 'package:datahub/datahub.dart';
+import 'package:datahub_postgres/ewkb/ewkb.dart';
 import 'package:datahub_postgres/postgresql_data_types.dart';
-import 'package:datahub_postgres/wkb/wkb.dart';
 
 part 'text_entry.g.dart';
 

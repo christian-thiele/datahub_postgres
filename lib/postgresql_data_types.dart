@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:datahub/persistence.dart';
-import 'package:datahub_postgres/wkb/wkb.dart';
+import 'package:datahub_postgres/ewkb/ewkb.dart';
 import 'package:postgres/postgres.dart';
 import 'package:postgres/postgres_v3_experimental.dart';
 
@@ -262,7 +262,8 @@ class GeographyDataType extends DataType<Geometry> {
   const GeographyDataType();
 }
 
-class PostgresqlGeographyDataType extends PostgresqlDataType<Geometry, GeographyDataType> {
+class PostgresqlGeographyDataType
+    extends PostgresqlDataType<Geometry, GeographyDataType> {
   @override
   ParamSql getTypeSql(DataField<DataType> field) => ParamSql('geography');
 
@@ -273,7 +274,7 @@ class PostgresqlGeographyDataType extends PostgresqlDataType<Geometry, Geography
     }
 
     if (data is Uint8List) {
-      return parseWkb(data);
+      return Geometry.parseEWKB(data);
     }
 
     throw Exception('bullshit right here');
@@ -282,10 +283,11 @@ class PostgresqlGeographyDataType extends PostgresqlDataType<Geometry, Geography
   @override
   ParamSql toPostgresValue(DataField<DataType> field, Geometry? data) {
     if (data != null) {
-      return ParamSql.param(data.toEWKB(), PgDataType.byteArray);
-    }else{
+      final sql = ParamSql('st_geomfromewkb');
+      sql.add(ParamSql.param(data.toEWKB(), PgDataType.byteArray)..wrap());
+      return sql;
+    } else {
       return ParamSql('NULL');
     }
   }
-
 }
