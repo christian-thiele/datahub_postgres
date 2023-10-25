@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:boost/boost.dart';
-import 'package:datahub_postgres/ewkb/ewkb.dart';
+import 'package:datahub_postgres/postgis.dart';
 import 'package:test/scaffolding.dart';
 
 void main() {

@@ -1,4 +1,5 @@
 import 'package:datahub/persistence.dart';
+import 'package:datahub_postgres/src/sql_expression.dart';
 
 import 'package:postgres/postgres_v3_experimental.dart';
 
@@ -101,8 +102,8 @@ abstract class SqlBuilder {
           break;
       }
       // ignore: deprecated_member_use
-    } else if (filter is CustomSqlCondition) {
-      sql.addSql(filter.sql);
+    } else if (filter is SqlExpression) {
+      sql.add(filter);
     } else {
       throw PersistenceException('PostgreSQL implementation does not '
           'support filter type ${filter.runtimeType}.');
@@ -277,8 +278,8 @@ abstract class SqlBuilder {
       sql.addSql(')');
       return sql;
       // ignore: deprecated_member_use
-    } else if (expression is CustomSqlExpression) {
-      return ParamSql(expression.sqlExpression);
+    } else if (expression is SqlExpression) {
+      return expression;
     } else {
       throw PersistenceException('PostgreSQL implementation does not '
           'support Expression type ${expression.runtimeType}.');

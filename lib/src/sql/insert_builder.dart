@@ -33,7 +33,7 @@ class InsertBuilder implements SqlBuilder {
     }).toList();
 
     sql.addSql('INSERT INTO $schemaName.$tableName (');
-    sql.addSql(values.map((e) => e.a).join(', ')); //TODO maybe params too?
+    sql.addSql(values.map((e) => e.a).join(', '));
     sql.addSql(') VALUES (');
     sql.add(values.map((e) => e.b).joinSql(', '));
     sql.addSql(')');

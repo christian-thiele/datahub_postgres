@@ -3,7 +3,6 @@ import 'package:datahub/persistence.dart';
 import 'postgresql_database_adapter.dart';
 import 'postgresql_database_context.dart';
 
-import 'sql/param_sql.dart';
 import 'sql/sql.dart';
 
 class PostgreSQLDatabaseMigrator extends Migrator {

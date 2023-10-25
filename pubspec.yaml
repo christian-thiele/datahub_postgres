@@ -10,17 +10,11 @@ environment:
 dependencies:
   boost: ^1.8.9
   buffer: ^1.2.2
-  datahub: ^0.17.0-dev.50
+  datahub: ^0.17.0-dev.52
   postgres: ^2.6.3
 
 dev_dependencies:
   lints: ^2.0.0
   test: ^1.21.0
-  datahub_codegen: ^0.17.0-dev.14
+  datahub_codegen: ^0.17.0-dev.15
   build_runner: ^2.4.6
-
-dependency_overrides:
-  datahub:
-    path: ../datahub
-  datahub_codegen:
-    path: ../datahub_codegen

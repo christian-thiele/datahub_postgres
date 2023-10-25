@@ -12,6 +12,14 @@ import 'multi_polygon.dart';
 import 'point.dart';
 import 'polygon.dart';
 
+export 'geometry.dart';
+export 'point.dart';
+export 'polygon.dart';
+export 'multi_point.dart';
+export 'multi_line_string.dart';
+export 'multi_polygon.dart';
+export 'line_string.dart';
+
 const wkbZ = 0x80000000;
 const wkbM = 0x40000000;
 const wkbSRID = 0x20000000;

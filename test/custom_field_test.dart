@@ -1,7 +1,7 @@
 import 'package:datahub/datahub.dart';
 import 'package:datahub/test.dart';
 import 'package:datahub_postgres/datahub_postgres.dart';
-import 'package:datahub_postgres/ewkb/ewkb.dart';
+import 'package:datahub_postgres/postgis.dart';
 import 'package:test/test.dart';
 
 import 'lib/custom_field/custom_field_schema.dart';

@@ -1,7 +1,6 @@
 import 'package:datahub/datahub.dart';
+import 'package:datahub_postgres/datahub_postgres.dart';
 import 'package:test/test.dart';
-
-import 'package:datahub_postgres/sql/sql.dart';
 
 class TableDataBean extends DataBean<void> {
   @override
@@ -122,8 +121,7 @@ void main() {
                   WildcardSelect(),
                   ExpressionSelect(
                     // ignore: deprecated_member_use
-                    CustomSqlExpression(
-                        'row_number() OVER (order by something)'),
+                    SqlExpression('row_number() OVER (order by something)'),
                     'num',
                   ),
                 ],

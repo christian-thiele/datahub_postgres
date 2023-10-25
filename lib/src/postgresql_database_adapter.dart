@@ -9,7 +9,7 @@ import 'postgresql_data_types.dart';
 import 'postgresql_database_connection.dart';
 import 'postgresql_database_context.dart';
 import 'postgresql_database_migrator.dart';
-import 'sql/param_sql.dart';
+
 import 'sql/sql.dart';
 import 'type_registry.dart';
 
