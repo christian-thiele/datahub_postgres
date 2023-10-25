@@ -45,10 +45,10 @@ packages:
     dependency: "direct main"
     description:
       name: boost
-      sha256: "48a29dbd78a4728f059ec5f38869861b979c983a518c11037a60684e23bf19d6"
+      sha256: "32d4aed952abcf64d5aea5f0620e2ff85f2027f963fa889a53005247816cac90"
       url: "https://pub.dev"
     source: hosted
-    version: "1.8.9"
+    version: "1.8.10"
   buffer:
     dependency: "direct main"
     description:
@@ -204,17 +204,19 @@ packages:
   datahub:
     dependency: "direct main"
     description:
-      path: "../datahub"
-      relative: true
-    source: path
-    version: "0.17.0-dev.51"
+      name: datahub
+      sha256: "9b74bc471c37ce2743334ab0c7b132e90bbaec48edf332d6b5eb6cc5d6ce2e24"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.17.0-dev.52"
   datahub_codegen:
     dependency: "direct dev"
     description:
-      path: "../datahub_codegen"
-      relative: true
-    source: path
-    version: "0.17.0-dev.14"
+      name: datahub_codegen
+      sha256: "756073b992823f38629c42d3a9e854c747f18aede2d505a695d04a9e311f0161"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.17.0-dev.15"
   file:
     dependency: transitive
     description:

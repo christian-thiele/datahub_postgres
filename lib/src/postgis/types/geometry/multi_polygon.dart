@@ -10,17 +10,17 @@ import 'geometry_type.dart';
 class MultiPolygon extends Geometry {
   final List<Polygon> polygons;
 
-  MultiPolygon(int? SRID, this.polygons, bool hasZ, bool hasM)
-      : super(SRID, GeometryType.multiPolygon, hasZ, hasM);
+  MultiPolygon(int? srid, this.polygons, bool hasZ, bool hasM)
+      : super(srid, GeometryType.multiPolygon, hasZ, hasM);
 
   factory MultiPolygon.read(
-      int? SRID, ByteDataReader reader, bool hasZ, bool hasM) {
+      int? srid, ByteDataReader reader, bool hasZ, bool hasM) {
     final length = reader.readUint32();
     return MultiPolygon(
-      SRID,
+      srid,
       List.generate(
         length,
-        (i) => Geometry.read(SRID, reader, hasZ, hasM) as Polygon,
+        (i) => Geometry.read(srid, reader, hasZ, hasM) as Polygon,
       ),
       hasZ,
       hasM,

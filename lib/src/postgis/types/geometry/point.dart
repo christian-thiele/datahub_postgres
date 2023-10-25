@@ -12,12 +12,12 @@ class Point extends Geometry {
   final double? z;
   final double? m;
 
-  Point(int? SRID, this.x, this.y, [this.z, this.m])
-      : super(SRID, GeometryType.point, z != null, m != null);
+  Point(int? srid, this.x, this.y, [this.z, this.m])
+      : super(srid, GeometryType.point, z != null, m != null);
 
-  factory Point.read(int? SRID, ByteDataReader reader, bool hasZ, bool hasM) {
+  factory Point.read(int? srid, ByteDataReader reader, bool hasZ, bool hasM) {
     return Point(
-      SRID,
+      srid,
       reader.readFloat64(),
       reader.readFloat64(),
       hasZ ? reader.readFloat64() : null,

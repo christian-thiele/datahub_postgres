@@ -11,15 +11,15 @@ import 'point.dart';
 class MultiPoint extends Geometry {
   final List<Point> points;
 
-  MultiPoint(int? SRID, this.points, bool hasZ, bool hasM)
-      : super(SRID, GeometryType.multiPoint, hasZ, hasM);
+  MultiPoint(int? srid, this.points, bool hasZ, bool hasM)
+      : super(srid, GeometryType.multiPoint, hasZ, hasM);
 
   factory MultiPoint.read(
-      int? SRID, ByteDataReader reader, bool hasZ, bool hasM) {
+      int? srid, ByteDataReader reader, bool hasZ, bool hasM) {
     final length = reader.readUint32();
     return MultiPoint(
-      SRID,
-      List.generate(length, (i) => Geometry.read(SRID, reader, hasZ, hasM) as Point),
+      srid,
+      List.generate(length, (i) => Geometry.read(srid, reader, hasZ, hasM) as Point),
       hasZ,
       hasM,
     );

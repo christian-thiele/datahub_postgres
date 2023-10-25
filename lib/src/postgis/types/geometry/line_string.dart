@@ -11,17 +11,17 @@ import 'point.dart';
 class LineString extends Geometry {
   final List<Point> points;
 
-  LineString(int? SRID, this.points, bool hasZ, bool hasM)
-      : super(SRID, GeometryType.lineString, hasZ, hasM);
+  LineString(int? srid, this.points, bool hasZ, bool hasM)
+      : super(srid, GeometryType.lineString, hasZ, hasM);
 
   factory LineString.read(
-      int? SRID, ByteDataReader reader, bool hasZ, bool hasM) {
+      int? srid, ByteDataReader reader, bool hasZ, bool hasM) {
     final length = reader.readUint32();
     return LineString(
-      SRID,
+      srid,
       List.generate(
         length,
-        (i) => Geometry.read(SRID, reader, hasZ, hasM) as Point,
+        (i) => Geometry.read(srid, reader, hasZ, hasM) as Point,
       ),
       hasZ,
       hasM,

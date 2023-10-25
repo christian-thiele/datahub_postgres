@@ -10,17 +10,17 @@ import 'geometry_type.dart';
 class MultiLineString extends Geometry {
   final List<LineString> lineStrings;
 
-  MultiLineString(int? SRID, this.lineStrings, bool hasZ, bool hasM)
-      : super(SRID, GeometryType.multiLineString, hasZ, hasM);
+  MultiLineString(int? srid, this.lineStrings, bool hasZ, bool hasM)
+      : super(srid, GeometryType.multiLineString, hasZ, hasM);
 
   factory MultiLineString.read(
-      int? SRID, ByteDataReader reader, bool hasZ, bool hasM) {
+      int? srid, ByteDataReader reader, bool hasZ, bool hasM) {
     final length = reader.readUint32();
     return MultiLineString(
-      SRID,
+      srid,
       List.generate(
         length,
-        (i) => Geometry.read(SRID, reader, hasZ, hasM) as LineString,
+        (i) => Geometry.read(srid, reader, hasZ, hasM) as LineString,
       ),
       hasZ,
       hasM,

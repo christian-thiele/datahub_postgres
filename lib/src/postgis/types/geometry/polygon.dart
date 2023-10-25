@@ -5,21 +5,20 @@ import 'package:buffer/buffer.dart';
 import 'byte_order.dart';
 import 'geometry.dart';
 import 'geometry_type.dart';
-import 'line_string.dart';
 
 class Polygon extends Geometry {
   final List<LineString> rings;
 
-  Polygon(int? SRID, this.rings, bool hasZ, bool hasM)
-      : super(SRID, GeometryType.polygon, hasZ, hasM);
+  Polygon(int? srid, this.rings, bool hasZ, bool hasM)
+      : super(srid, GeometryType.polygon, hasZ, hasM);
 
-  factory Polygon.read(int? SRID, ByteDataReader reader, bool hasZ, bool hasM) {
+  factory Polygon.read(int? srid, ByteDataReader reader, bool hasZ, bool hasM) {
     final length = reader.readUint32();
     return Polygon(
-      SRID,
+      srid,
       List.generate(
         length,
-        (i) => Geometry.read(SRID, reader, hasZ, hasM) as LineString,
+        (i) => Geometry.read(srid, reader, hasZ, hasM) as LineString,
       ),
       hasZ,
       hasM,

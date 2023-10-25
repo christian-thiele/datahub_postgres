@@ -10,15 +10,15 @@ import 'line_string.dart';
 class GeometryCollection extends Geometry {
   final List<Geometry> geometry;
 
-  GeometryCollection(int? SRID, this.geometry, bool hasZ, bool hasM)
-      : super(SRID, GeometryType.geometryCollection, hasZ, hasM);
+  GeometryCollection(int? srid, this.geometry, bool hasZ, bool hasM)
+      : super(srid, GeometryType.geometryCollection, hasZ, hasM);
 
   factory GeometryCollection.read(
-      int? SRID, ByteDataReader reader, bool hasZ, bool hasM) {
+      int? srid, ByteDataReader reader, bool hasZ, bool hasM) {
     final length = reader.readUint32();
     return GeometryCollection(
-      SRID,
-      List.generate(length, (i) => Geometry.read(SRID, reader, hasZ, hasM)),
+      srid,
+      List.generate(length, (i) => Geometry.read(srid, reader, hasZ, hasM)),
       hasZ,
       hasM,
     );

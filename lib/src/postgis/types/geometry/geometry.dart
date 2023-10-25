@@ -25,12 +25,12 @@ const wkbM = 0x40000000;
 const wkbSRID = 0x20000000;
 
 abstract class Geometry {
-  final int? SRID;
+  final int? srid;
   final GeometryType type;
   final bool hasZ;
   final bool hasM;
 
-  Geometry(this.SRID, this.type, this.hasZ, this.hasM);
+  Geometry(this.srid, this.type, this.hasZ, this.hasM);
 
   static Geometry parseEWKB(Uint8List bytes) {
     final byteOrder = ByteOrder.read(bytes.first);
@@ -47,27 +47,27 @@ abstract class Geometry {
     final baseType = typeDef & ~wkbZ & ~wkbM & ~wkbSRID;
     final type = GeometryType.read(baseType);
 
-    final SRID = hasSRID ? reader.readUint32() : null;
+    final srid = hasSRID ? reader.readUint32() : null;
 
     switch (type) {
       case GeometryType.point:
-        return Point.read(SRID, reader, hasZ, hasM);
+        return Point.read(srid, reader, hasZ, hasM);
       case GeometryType.lineString:
-        return LineString.read(SRID, reader, hasZ, hasM);
+        return LineString.read(srid, reader, hasZ, hasM);
       case GeometryType.polygon:
-        return Polygon.read(SRID, reader, hasZ, hasM);
+        return Polygon.read(srid, reader, hasZ, hasM);
       case GeometryType.multiPoint:
-        return MultiPoint.read(SRID, reader, hasZ, hasM);
+        return MultiPoint.read(srid, reader, hasZ, hasM);
       case GeometryType.multiLineString:
-        return MultiLineString.read(SRID, reader, hasZ, hasM);
+        return MultiLineString.read(srid, reader, hasZ, hasM);
       case GeometryType.multiPolygon:
-        return MultiPolygon.read(SRID, reader, hasZ, hasM);
+        return MultiPolygon.read(srid, reader, hasZ, hasM);
       case GeometryType.geometryCollection:
-        return GeometryCollection.read(SRID, reader, hasZ, hasM);
+        return GeometryCollection.read(srid, reader, hasZ, hasM);
     }
   }
 
-  static Geometry read(int? SRID, ByteDataReader reader, bool hasZ, bool hasM) {
+  static Geometry read(int? srid, ByteDataReader reader, bool hasZ, bool hasM) {
     reader.readUint8();
     final typeDef = reader.readUint32();
     final baseType = typeDef & ~wkbZ & ~wkbM & ~wkbSRID;
@@ -75,19 +75,19 @@ abstract class Geometry {
 
     switch (type) {
       case GeometryType.point:
-        return Point.read(SRID, reader, hasZ, hasM);
+        return Point.read(srid, reader, hasZ, hasM);
       case GeometryType.lineString:
-        return LineString.read(SRID, reader, hasZ, hasM);
+        return LineString.read(srid, reader, hasZ, hasM);
       case GeometryType.polygon:
-        return Polygon.read(SRID, reader, hasZ, hasM);
+        return Polygon.read(srid, reader, hasZ, hasM);
       case GeometryType.multiPoint:
-        return MultiPoint.read(SRID, reader, hasZ, hasM);
+        return MultiPoint.read(srid, reader, hasZ, hasM);
       case GeometryType.multiLineString:
-        return MultiLineString.read(SRID, reader, hasZ, hasM);
+        return MultiLineString.read(srid, reader, hasZ, hasM);
       case GeometryType.multiPolygon:
-        return MultiPolygon.read(SRID, reader, hasZ, hasM);
+        return MultiPolygon.read(srid, reader, hasZ, hasM);
       case GeometryType.geometryCollection:
-        return GeometryCollection.read(SRID, reader, hasZ, hasM);
+        return GeometryCollection.read(srid, reader, hasZ, hasM);
     }
   }
 
@@ -95,12 +95,12 @@ abstract class Geometry {
     final builder = ByteDataWriter(endian: byteOrder.endian);
     builder.writeInt8(byteOrder.id);
     final typeInt = type.id |
-        (SRID != null ? wkbSRID : 0) |
+        (srid != null ? wkbSRID : 0) |
         (hasZ ? wkbZ : 0) |
         (hasM ? wkbM : 0);
     builder.writeInt32(typeInt);
-    if (SRID != null) {
-      builder.writeInt32(SRID!);
+    if (srid != null) {
+      builder.writeInt32(srid!);
     }
 
     builder.write(toBytes(byteOrder));

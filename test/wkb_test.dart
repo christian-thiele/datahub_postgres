@@ -9,7 +9,7 @@ void main() {
     test('Decode Point', () {
       final bytes = hex2Bin('0101000020E6100000534145D5AF242740151DC9E53F784940');
       final geo = Geometry.parseEWKB(bytes) as Point;
-      print(geo.SRID);
+      print(geo.srid);
       print(geo.x);
       print(geo.y);
       print(geo.z);
