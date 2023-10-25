@@ -45,8 +45,7 @@ class PostgreSQLDatabaseMigrator extends Migrator {
     await _context.execute(builder.buildSql());
   }
 
-  @override
-  Future<void> customSql(String sql) async {
-    await _context.execute(ParamSql(sql));
+  Future<void> customSql(ParamSql sql) async {
+    await _context.execute(sql);
   }
 }
