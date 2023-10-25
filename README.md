@@ -2,7 +2,7 @@
 <img src="https://datahubproject.net/logo_shadow.svg" />
 </p>
 
-<h2 align="center">DataHub Code Generation Lib</h2>
+<h2 align="center">DataHub PostgreSQL Extension</h2>
 <p align="center">
 This library is part of the DataHub Project.<br/>
 <a href="https://datahubproject.net">https://datahubproject.net</a>
