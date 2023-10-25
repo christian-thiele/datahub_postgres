@@ -12,6 +12,8 @@ import 'multi_polygon.dart';
 import 'point.dart';
 import 'polygon.dart';
 
+export 'byte_order.dart';
+export 'geometry_type.dart';
 export 'geometry.dart';
 export 'point.dart';
 export 'polygon.dart';

@@ -2,9 +2,7 @@ import 'dart:typed_data';
 
 import 'package:buffer/buffer.dart';
 
-import 'byte_order.dart';
 import 'geometry.dart';
-import 'geometry_type.dart';
 
 class Point extends Geometry {
   final double x;

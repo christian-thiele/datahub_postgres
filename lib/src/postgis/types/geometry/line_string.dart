@@ -2,11 +2,7 @@ import 'dart:typed_data';
 
 import 'package:buffer/buffer.dart';
 
-import 'byte_order.dart';
 import 'geometry.dart';
-import 'geometry_type.dart';
-
-import 'point.dart';
 
 class LineString extends Geometry {
   final List<Point> points;

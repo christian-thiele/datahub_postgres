@@ -2,10 +2,7 @@ import 'dart:typed_data';
 
 import 'package:buffer/buffer.dart';
 
-import 'line_string.dart';
-import 'byte_order.dart';
 import 'geometry.dart';
-import 'geometry_type.dart';
 
 class MultiLineString extends Geometry {
   final List<LineString> lineStrings;

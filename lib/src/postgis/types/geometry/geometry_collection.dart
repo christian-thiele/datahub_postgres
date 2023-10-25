@@ -2,10 +2,7 @@ import 'dart:typed_data';
 
 import 'package:buffer/buffer.dart';
 
-import 'byte_order.dart';
 import 'geometry.dart';
-import 'geometry_type.dart';
-import 'line_string.dart';
 
 class GeometryCollection extends Geometry {
   final List<Geometry> geometry;

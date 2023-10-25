@@ -2,10 +2,7 @@ import 'dart:typed_data';
 
 import 'package:buffer/buffer.dart';
 
-import 'polygon.dart';
-import 'byte_order.dart';
 import 'geometry.dart';
-import 'geometry_type.dart';
 
 class MultiPolygon extends Geometry {
   final List<Polygon> polygons;
