@@ -219,7 +219,7 @@ class PostgresqlByteDataType
     //TODO parse data
 
     throw PersistenceException(
-        'Invalid result type for PostgresqlDateTimeDataType.');
+        'Invalid result type for PostgresqlByteDataType.');
   }
 
   @override

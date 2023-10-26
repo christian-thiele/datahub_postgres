@@ -246,6 +246,8 @@ abstract class SqlBuilder {
           (expression.value as Enum).name,
           PgDataType.unknownType,
         );
+      } else if (expression.value == null) {
+        return ParamSql('NULL');
       } else {
         return ParamSql.param(expression.value, PgDataType.unknownType);
       }

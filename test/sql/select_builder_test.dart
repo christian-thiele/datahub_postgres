@@ -40,6 +40,22 @@ void main() {
     );
 
     test(
+      'Select filter eq NULL',
+      _test(
+        SelectBuilder(schemaTable)..where(Filter.equals(fieldX, null)),
+        'SELECT * FROM "schema"."table" WHERE "fake"."fieldX" IS NULL',
+      ),
+    );
+
+    test(
+      'Select filter !eq NULL',
+      _test(
+        SelectBuilder(schemaTable)..where(Filter.notEquals(fieldX, null)),
+        'SELECT * FROM "schema"."table" WHERE "fake"."fieldX" IS NOT NULL',
+      ),
+    );
+
+    test(
       'Select filter eq enum',
       _test(
           SelectBuilder(schemaTable)
