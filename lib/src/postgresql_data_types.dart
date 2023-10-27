@@ -5,6 +5,8 @@ import 'package:postgres/postgres.dart';
 
 import 'sql/sql.dart';
 
+export 'package:postgres/postgres.dart' show PostgreSQLDataType;
+
 abstract class PostgresqlDataType<T, TDataType extends DataType<T>> {
   Type get baseType => TDataType;
 
@@ -247,11 +249,40 @@ class PostgresqlJsonMapDataType
     //TODO parse data
 
     throw PersistenceException(
-        'Invalid result type for PostgresqlDateTimeDataType.');
+        'Invalid result type for PostgresqlJsonMapDataType.');
   }
 
   @override
   ParamSql toPostgresValue(DataField field, Map<String, dynamic>? data) {
+    return ParamSql.param(data, PostgreSQLDataType.jsonb);
+  }
+}
+
+class PostgresqlJsonListDataType
+    extends PostgresqlDataType<List<dynamic>, JsonListDataType> {
+  const PostgresqlJsonListDataType();
+
+  @override
+  ParamSql getTypeSql(DataField field) => ParamSql('jsonb');
+
+  @override
+  List<dynamic>? toDaoValue(data) {
+    if (data == null) {
+      return null;
+    }
+
+    if (data is List<dynamic>) {
+      return data;
+    }
+
+    //TODO parse data
+
+    throw PersistenceException(
+        'Invalid result type for PostgresqlJsonListDataType.');
+  }
+
+  @override
+  ParamSql toPostgresValue(DataField field, List<dynamic>? data) {
     return ParamSql.param(data, PostgreSQLDataType.jsonb);
   }
 }
