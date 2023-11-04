@@ -247,7 +247,9 @@ class PostgresqlJsonMapDataType
       return data;
     }
 
-    //TODO parse data
+    if (data is String) {
+      return jsonDecode(data) as Map<String, dynamic>;
+    }
 
     throw PersistenceException(
         'Invalid result type for PostgresqlJsonMapDataType.');
@@ -276,10 +278,12 @@ class PostgresqlJsonListDataType
       return data;
     }
 
-    //TODO parse data
+    if (data is String) {
+      return jsonDecode(data) as List<dynamic>;
+    }
 
     throw PersistenceException(
-        'Invalid result type for PostgresqlJsonListDataType.');
+        'Invalid result type ${data.runtimeType} for PostgresqlJsonListDataType.');
   }
 
   @override

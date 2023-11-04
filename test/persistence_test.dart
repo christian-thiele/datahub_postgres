@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:datahub/datahub.dart';
@@ -5,88 +6,66 @@ import 'package:datahub/test.dart';
 import 'package:datahub_postgres/datahub_postgres.dart';
 import 'package:test/test.dart';
 
-import 'lib/blogsystem/article_dao.dart';
-import 'lib/blogsystem/blog_schema.dart';
+import 'lib/test_schema/test_schema.dart';
 
 void main() {
   final host = TestHost([
-    () => PostgreSQLDatabaseAdapter('postgres', BlogSchema()),
-    () => CRUDRepository('postgres', ArticleDaoDataBean),
+    () => PostgreSQLDatabaseAdapter('postgres', TestSchema()),
+    () => CRUDRepository('postgres', TestObjectDataBean),
   ], args: [
     'test/config.yaml'
   ], config: {
     'maxConnectionLifetime': 10,
   });
 
-  group('Persistence', () {
-    test('CRUD Repository (PostgreSQL)', host.test(() async {
-      final article = ArticleDao(
-        userId: 1,
-        blogKey: 'abc',
-        content: 'abc123',
-        createdTimestamp: DateTime.now(),
-        image: Uint8List(0),
-        lastEditTimestamp: DateTime.now(),
-        title: 'Test',
+  group('Test Schema', () {
+    test('CRUD', host.test(() async {
+      final repo = resolve<CRUDRepository<TestObject, int>>();
+      expect(await repo.count(), 0);
+
+      final testObject = TestObject(
+        string: 'string',
+        boolean: true,
+        intNumber: 4,
+        doubleNumber: 12.3,
+        jsonList: [
+          1,
+          2,
+          3.5,
+          true,
+          "abc",
+          {"someProperty": "value"},
+          [1, 2, 3],
+        ],
+        jsonMap: {"someProperty": "v"},
+        bytes: Uint8List.fromList([1, 2, 3, 255, 244, 233]),
+        timestamp: DateTime.timestamp(),
       );
 
-      final repo = resolve<CRUDRepository<ArticleDao, int>>();
-      final id = await repo.create(article);
-      print('Created with id $id');
+      final id = await repo.create(testObject);
+      expect(id, 1);
 
-      final results = await repo.getAll();
-      expect(results.length, greaterThan(0));
-    }), timeout: Timeout.none);
+      final id2 = await repo.create(testObject.copyWith(boolean: false));
+      expect(id2, 2);
 
-    test('Pool behavior (PostgreSQL)', host.test(() async {
-      final article = ArticleDao(
-        userId: 1,
-        blogKey: 'abc',
-        content: 'abc123',
-        createdTimestamp: DateTime.now(),
-        image: Uint8List(0),
-        lastEditTimestamp: DateTime.now(),
-        title: 'Test',
-      );
+      expect(await repo.count(), 2);
 
-      final repo = resolve<CRUDRepository<ArticleDao, int>>();
-      final adapter = resolve<DatabaseAdapter>();
-      expect(adapter.poolAvailable, 3);
-      expect(adapter.poolSize, 3);
+      final falseResults =
+          await repo.getAll(filter: TestObjectDataBean.boolean.equals(false));
+      expect(falseResults.length, 1);
 
-      Future<void> somethingStupid() async {
-        await repo.transaction((context) async {
-          print('Blocking transaction.');
-          expect(adapter.poolAvailable, 1);
-          await Future.delayed(const Duration(seconds: 5));
-        });
-        print('Released transaction.');
-        expect(adapter.poolAvailable, 3);
-      }
+      final trueResults =
+          await repo.getAll(filter: TestObjectDataBean.boolean.equals(true));
+      expect(trueResults.length, 1);
 
-      final future = somethingStupid();
+      await repo.deleteById(id);
 
-      final id = await repo.create(article);
-      print('Created with id $id');
-      final results = await repo.getAll();
-      expect(results.length, greaterThan(0));
+      expect(await repo.count(), 1);
 
-      expect(adapter.poolAvailable, 2);
-      await future;
-
-      await Future.delayed(const Duration(seconds: 10));
-
-      expect(adapter.poolAvailable, 3);
-      await repo.transaction((context) async {
-        print((await repo.first())!.id);
-        expect(adapter.poolAvailable, 2);
-        await repo.transaction((context) async {
-          print((await repo.first())!.id);
-          expect(adapter.poolAvailable, 2);
-        });
-      });
-
-      expect(adapter.poolAvailable, 3);
-    }), timeout: Timeout.none);
+      expect(
+          deepMapEquality(TestObjectDataBean.unmap(trueResults.first),
+              TestObjectDataBean.unmap(testObject)),
+          isTrue);
+    }));
   });
 }

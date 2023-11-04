@@ -5,5 +5,5 @@ services:
       - POSTGRES_DB=test
       - POSTGRES_USER=test
       - POSTGRES_PASSWORD=secretpassword
-    tempfs:
-      - ""/var/lib/postgresql/data"
+    tmpfs:
+      - /var/lib/postgresql/data

@@ -71,7 +71,7 @@ class _SimpleDataBeanImpl extends PrimaryKeyDataBean<Simple, int> {
     length: 0,
   );
 
-  final yesOrNo = DataField<ByteDataType>(
+  final yesOrNo = DataField<BoolDataType>(
     layoutName: 'simple',
     name: 'yes_or_no',
     nullable: false,
