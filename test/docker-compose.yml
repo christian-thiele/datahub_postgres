@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    environment:
+      - POSTGRES_DB=test
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=secretpassword
+    tempfs:
+      - ""/var/lib/postgresql/data"
