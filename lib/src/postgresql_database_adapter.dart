@@ -32,6 +32,8 @@ class PostgreSQLDatabaseAdapter
     PostgresqlDoubleDataType(),
     PostgresqlDateTimeDataType(),
     PostgresqlByteDataType(),
+    PostgresqlJsonListDataType(),
+    PostgresqlJsonMapDataType(),
   };
 
   late final host = config<String>('host');

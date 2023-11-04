@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:datahub/persistence.dart';
@@ -254,7 +255,7 @@ class PostgresqlJsonMapDataType
 
   @override
   ParamSql toPostgresValue(DataField field, Map<String, dynamic>? data) {
-    return ParamSql.param(data, PostgreSQLDataType.jsonb);
+    return ParamSql.param(jsonEncode(data), PostgreSQLDataType.jsonb);
   }
 }
 
@@ -283,6 +284,6 @@ class PostgresqlJsonListDataType
 
   @override
   ParamSql toPostgresValue(DataField field, List<dynamic>? data) {
-    return ParamSql.param(data, PostgreSQLDataType.jsonb);
+    return ParamSql.param(jsonEncode(data), PostgreSQLDataType.jsonb);
   }
 }

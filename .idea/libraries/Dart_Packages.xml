@@ -180,7 +180,7 @@
         <entry key="datahub">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/datahub-0.17.0-dev.53/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/datahub-0.17.0-dev.54/lib" />
             </list>
           </value>
         </entry>
@@ -625,7 +625,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/crypto-3.0.3/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/dart_amqp-0.2.5/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/dart_style-2.3.2/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/datahub-0.17.0-dev.53/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/datahub-0.17.0-dev.54/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/datahub_codegen-0.17.0-dev.16/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/file-7.0.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/fixnum-1.1.0/lib" />

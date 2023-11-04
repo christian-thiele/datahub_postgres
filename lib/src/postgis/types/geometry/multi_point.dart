@@ -4,7 +4,6 @@ import 'package:buffer/buffer.dart';
 
 import 'geometry.dart';
 
-
 class MultiPoint extends Geometry {
   final List<Point> points;
 
@@ -16,7 +15,8 @@ class MultiPoint extends Geometry {
     final length = reader.readUint32();
     return MultiPoint(
       srid,
-      List.generate(length, (i) => Geometry.read(srid, reader, hasZ, hasM) as Point),
+      List.generate(
+          length, (i) => Geometry.read(srid, reader, hasZ, hasM) as Point),
       hasZ,
       hasM,
     );
