@@ -41,10 +41,11 @@ class PostgreSQLDatabaseContext implements DatabaseContext {
   }
 
   Future<int> execute(ParamSql sql) async {
-    return await _context.execute(
+    final result = await _context.query(
       sql.toString(),
       substitutionValues: sql.getSubstitutionValues(),
     );
+    return result.affectedRowCount;
   }
 
   Future<List<List<QueryResult>>> querySql(ParamSql sql) async {

@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:datahub/datahub.dart';
@@ -62,10 +61,15 @@ void main() {
 
       expect(await repo.count(), 1);
 
+      expect(TestObjectDataBean.unmap(trueResults.first),
+          equals(TestObjectDataBean.unmap(testObject)));
+
+      await repo.update(testObject.copyWith(id: id2, doubleNumber: 55));
+
       expect(
-          deepMapEquality(TestObjectDataBean.unmap(trueResults.first),
-              TestObjectDataBean.unmap(testObject)),
-          isTrue);
+          TestObjectDataBean.unmap((await repo.findById(id2))!),
+          equals(TestObjectDataBean.unmap(
+              testObject.copyWith(id: id2, doubleNumber: 55))));
     }));
   });
 }
