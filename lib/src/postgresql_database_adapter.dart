@@ -23,8 +23,7 @@ const metaTable = '_datahub_meta';
 
 //TODO docs for config
 class PostgreSQLDatabaseAdapter
-    extends DatabaseAdapter<PostgreSQLDatabaseConnection>
-    with SqlContext {
+    extends DatabaseAdapter<PostgreSQLDatabaseConnection> with SqlContext {
   static const schemaVersionKey = 'schema_version';
 
   static const defaultDataTypes = <PostgresqlDataType>{
@@ -152,5 +151,4 @@ class PostgreSQLDatabaseAdapter
     );
     return result.isNotEmpty;
   }
-
 }

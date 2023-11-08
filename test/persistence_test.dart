@@ -50,11 +50,11 @@ void main() {
       expect(await repo.count(), 2);
 
       final falseResults =
-      await repo.getAll(filter: TestObjectDataBean.boolean.equals(false));
+          await repo.getAll(filter: TestObjectDataBean.boolean.equals(false));
       expect(falseResults.length, 1);
 
       final trueResults =
-      await repo.getAll(filter: TestObjectDataBean.boolean.equals(true));
+          await repo.getAll(filter: TestObjectDataBean.boolean.equals(true));
       expect(trueResults.length, 1);
 
       await repo.deleteById(id);
@@ -77,18 +77,41 @@ void main() {
     test('Filter Eq', host.test(() async {
       final repo = resolve<CRUDRepository<TestObject, int>>();
       await _populate(repo);
-      expect(await repo.count(filter: TestObjectDataBean.string.equals('string')), 1);
+      expect(
+          await repo.count(filter: TestObjectDataBean.string.equals('string')),
+          1);
       expect(await repo.count(filter: TestObjectDataBean.string.equals(1)), 0);
-      expect(await repo.count(filter: TestObjectDataBean.string.equals('test')), 1);
-      expect(await repo.count(filter: TestObjectDataBean.string.equals('test22')), 0);
-      expect(await repo.count(filter: TestObjectDataBean.boolean.equals(true)), 1);
-      expect(await repo.count(filter: TestObjectDataBean.boolean.equals(false)), 1);
-      expect(await repo.count(filter: TestObjectDataBean.intNumber.equals(1)), 0);
-      expect(await repo.count(filter: TestObjectDataBean.intNumber.equals(4)), 2);
-      expect(await repo.count(filter: TestObjectDataBean.doubleNumber.equals(12.3)), 2);
-      expect(await repo.count(filter: TestObjectDataBean.doubleNumber.equals(12.4)), 0);
-      expect(await repo.count(filter: TestObjectDataBean.bytes.equals(Uint8List.fromList([1, 2, 3, 255, 244, 233]))), 2);
-      expect(await repo.count(filter: TestObjectDataBean.bytes.equals(Uint8List.fromList([1, 2, 3, 245, 244, 233]))), 0);
+      expect(await repo.count(filter: TestObjectDataBean.string.equals('test')),
+          1);
+      expect(
+          await repo.count(filter: TestObjectDataBean.string.equals('test22')),
+          0);
+      expect(
+          await repo.count(filter: TestObjectDataBean.boolean.equals(true)), 1);
+      expect(await repo.count(filter: TestObjectDataBean.boolean.equals(false)),
+          1);
+      expect(
+          await repo.count(filter: TestObjectDataBean.intNumber.equals(1)), 0);
+      expect(
+          await repo.count(filter: TestObjectDataBean.intNumber.equals(4)), 2);
+      expect(
+          await repo.count(
+              filter: TestObjectDataBean.doubleNumber.equals(12.3)),
+          2);
+      expect(
+          await repo.count(
+              filter: TestObjectDataBean.doubleNumber.equals(12.4)),
+          0);
+      expect(
+          await repo.count(
+              filter: TestObjectDataBean.bytes
+                  .equals(Uint8List.fromList([1, 2, 3, 255, 244, 233]))),
+          2);
+      expect(
+          await repo.count(
+              filter: TestObjectDataBean.bytes
+                  .equals(Uint8List.fromList([1, 2, 3, 245, 244, 233]))),
+          0);
     }));
   });
 }

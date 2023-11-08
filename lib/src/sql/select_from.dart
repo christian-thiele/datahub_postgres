@@ -3,7 +3,8 @@ import 'package:datahub_postgres/datahub_postgres.dart';
 import 'package:datahub_postgres/src/sql_context.dart';
 
 abstract class SelectFrom implements SqlBuilder {
-  static SelectFrom fromQuerySource(SqlContext context, String schemaName, QuerySource source) {
+  static SelectFrom fromQuerySource(
+      SqlContext context, String schemaName, QuerySource source) {
     if (source is DataBean) {
       return SelectFromTable(schemaName, source.layoutName);
     } else if (source is JoinedQuerySource) {
@@ -13,7 +14,8 @@ abstract class SelectFrom implements SqlBuilder {
         (source as JoinedQuerySource)
             .joins
             .map(
-              (e) => TableJoin(context,
+              (e) => TableJoin(
+                context,
                 SelectFromTable(schemaName, e.bean.layoutName),
                 e.filter,
                 (source as JoinedQuerySource).innerJoin,

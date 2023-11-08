@@ -91,7 +91,8 @@ class PostgreSQLDatabaseContext implements DatabaseContext {
     int limit = -1,
     bool forUpdate = false,
   }) async {
-    final from = SelectFrom.fromQuerySource(_adapter, _adapter.schema.name, bean);
+    final from =
+        SelectFrom.fromQuerySource(_adapter, _adapter.schema.name, bean);
     final builder = SelectBuilder(_adapter, from)
       ..select([const WildcardSelect()])
       ..distinct(distinct)
@@ -187,7 +188,8 @@ class PostgreSQLDatabaseContext implements DatabaseContext {
     Map<DataField, dynamic> values,
     Filter filter,
   ) async {
-    final from = SelectFrom.fromQuerySource(_adapter, _adapter.schema.name, source);
+    final from =
+        SelectFrom.fromQuerySource(_adapter, _adapter.schema.name, source);
     final builder = UpdateBuilder(_adapter, from)
       ..values(values)
       ..where(filter);
@@ -232,7 +234,8 @@ class PostgreSQLDatabaseContext implements DatabaseContext {
     int limit = -1,
     bool forUpdate = false,
   }) async {
-    final from = SelectFrom.fromQuerySource(_adapter, _adapter.schema.name, source);
+    final from =
+        SelectFrom.fromQuerySource(_adapter, _adapter.schema.name, source);
     final builder = SelectBuilder(_adapter, from)
       ..where(filter)
       ..orderBy(sort)

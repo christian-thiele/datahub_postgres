@@ -11,8 +11,7 @@ mixin SqlContext {
 
   PostgresqlDataType findType(DataField field) {
     return typeRegistry.firstOrNullWhere((e) => field.type == e.baseType) ??
-        (throw PersistenceException(
-            'No type registered for ${field.type}.'));
+        (throw PersistenceException('No type registered for ${field.type}.'));
   }
 
   PostgresqlDataType findTypeForValue(dynamic value) {
