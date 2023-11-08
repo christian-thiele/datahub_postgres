@@ -1,3 +1,5 @@
+import 'package:datahub_postgres/src/sql_context.dart';
+
 import 'param_sql.dart';
 import 'sql_builder.dart';
 
@@ -10,7 +12,7 @@ class RemoveTableBuilder implements SqlBuilder {
   @override
   ParamSql buildSql() {
     final tableRef =
-        '${SqlBuilder.escapeName(schemaName)}.${SqlBuilder.escapeName(tableName)}';
+        '${SqlContext.escapeName(schemaName)}.${SqlContext.escapeName(tableName)}';
     return ParamSql('DROP TABLE $tableRef');
   }
 }

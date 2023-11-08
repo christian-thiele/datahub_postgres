@@ -1,8 +1,8 @@
 import 'package:datahub/datahub.dart';
-import 'package:datahub_postgres/src/type_registry.dart';
+import 'package:datahub_postgres/src/sql_context.dart';
 
 class PostgresqlQueryResult extends QueryResult {
-  final TypeRegistry registry;
+  final SqlContext registry;
 
   PostgresqlQueryResult(this.registry, super.layoutName, super.data);
 

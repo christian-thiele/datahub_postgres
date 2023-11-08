@@ -5,4 +5,4 @@ export 'src/postgresql_database_context.dart';
 export 'src/postgresql_database_migrator.dart';
 
 export 'src/sql/sql.dart';
-export 'src/sql_expression.dart';
+export 'src/expressions.dart';

@@ -1,10 +1,12 @@
 import 'package:datahub/persistence.dart';
+import 'package:datahub_postgres/src/sql_context.dart';
 
 import 'param_sql.dart';
 import 'select_from.dart';
 import 'sql_builder.dart';
 
 class SelectBuilder implements SqlBuilder {
+  final SqlContext context;
   final SelectFrom from;
   Filter _filter = Filter.empty;
   Sort _sort = Sort.empty;
@@ -15,7 +17,7 @@ class SelectBuilder implements SqlBuilder {
   int _offset = 0;
   bool _forUpdate = false;
 
-  SelectBuilder(this.from);
+  SelectBuilder(this.context, this.from);
 
   void select(List<QuerySelect> selections) {
     _select = selections;
@@ -55,13 +57,13 @@ class SelectBuilder implements SqlBuilder {
 
     if (_distinct?.isNotEmpty ?? false) {
       sql.addSql('DISTINCT ON ');
-      final selectResults = _distinct!.map((s) => SqlBuilder.selectSql(s));
+      final selectResults = _distinct!.map((s) => context.selectSql(s));
       sql.add(selectResults.joinSql(', ')..wrap());
       sql.addSql(' ');
     }
 
     if (_select?.isNotEmpty ?? false) {
-      final selectResults = _select!.map((s) => SqlBuilder.selectSql(s));
+      final selectResults = _select!.map((s) => context.selectSql(s));
       sql.add(selectResults.joinSql(', '));
       sql.addSql(' ');
     } else {
@@ -73,18 +75,18 @@ class SelectBuilder implements SqlBuilder {
 
     if (!_filter.isEmpty) {
       sql.addSql(' WHERE ');
-      sql.add(SqlBuilder.filterSql(_filter));
+      sql.add(context.filterSql(_filter));
     }
 
     if (_group?.isNotEmpty ?? false) {
       sql.addSql(' GROUP BY ');
-      final groupResults = _group!.map((s) => SqlBuilder.expressionSql(s));
+      final groupResults = _group!.map((s) => context.expressionSql(s));
       sql.add(groupResults.joinSql(', '));
     }
 
     if (!_sort.isEmpty) {
       sql.addSql(' ORDER BY ');
-      sql.add(SqlBuilder.sortSql(_sort));
+      sql.add(context.sortSql(_sort));
     }
 
     if (_offset > 0) {

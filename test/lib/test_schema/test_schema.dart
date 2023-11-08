@@ -7,7 +7,7 @@ export 'test_object.dart';
 class TestSchema extends DataSchema {
   TestSchema()
       : super(
-          'test',
+          'test_${DateTime.timestamp().millisecondsSinceEpoch}',
           1,
           [
             TestObjectDataBean,

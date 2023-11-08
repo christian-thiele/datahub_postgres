@@ -15,9 +15,11 @@ abstract class PostgresqlDataType<T, TDataType extends DataType<T>> {
 
   ParamSql getTypeSql(DataField field);
 
-  ParamSql toPostgresValue(DataField field, T? data);
+  ParamSql toPostgresValue(DataField? field, T? data);
 
   T? toDaoValue(dynamic data);
+
+  bool appliesToValue(dynamic value) => value is T;
 }
 
 class PostgresqlStringDataType
@@ -34,8 +36,8 @@ class PostgresqlStringDataType
   String? toDaoValue(dynamic data) => data?.toString();
 
   @override
-  ParamSql toPostgresValue(DataField field, String? data) {
-    return ParamSql.param(data, PostgreSQLDataType.varChar);
+  ParamSql toPostgresValue(DataField? field, String? data) {
+    return ParamSql.param(data, PostgreSQLDataType.unknownType);
   }
 }
 
@@ -90,11 +92,11 @@ class PostgresqlIntDataType extends PostgresqlDataType<int, IntDataType> {
   }
 
   @override
-  ParamSql toPostgresValue(DataField field, int? data) {
-    if (field.length == 32) {
-      return ParamSql.param<int>(data, PostgreSQLDataType.integer);
-    } else if (field.length == 64 || field.length == 0) {
-      return ParamSql.param<int>(data, PostgreSQLDataType.bigInteger);
+  ParamSql toPostgresValue(DataField? field, int? data) {
+    if (field?.length == 32) {
+      return ParamSql.param<Object>(data, PostgreSQLDataType.unknownType);
+    } else if (field == null || field.length == 64 || field.length == 0) {
+      return ParamSql.param<Object>(data, PostgreSQLDataType.unknownType);
     } else {
       throw PersistenceException(
           'PostgreSQL implementation does not support int length ${field.length}.'
@@ -128,8 +130,8 @@ class PostgresqlBoolDataType extends PostgresqlDataType<bool, BoolDataType> {
   }
 
   @override
-  ParamSql toPostgresValue(DataField field, bool? data) =>
-      ParamSql.param<bool>(data, PostgreSQLDataType.boolean);
+  ParamSql toPostgresValue(DataField? field, bool? data) =>
+      ParamSql.param<Object>(data, PostgreSQLDataType.unknownType);
 }
 
 class PostgresqlDoubleDataType
@@ -164,8 +166,8 @@ class PostgresqlDoubleDataType
   }
 
   @override
-  ParamSql toPostgresValue(DataField field, double? data) =>
-      ParamSql.param<double>(data, PostgreSQLDataType.double);
+  ParamSql toPostgresValue(DataField? field, double? data) =>
+      ParamSql.param<Object>(data, PostgreSQLDataType.unknownType);
 }
 
 class PostgresqlDateTimeDataType
@@ -198,8 +200,8 @@ class PostgresqlDateTimeDataType
   }
 
   @override
-  ParamSql toPostgresValue(DataField field, DateTime? data) =>
-      ParamSql.param<DateTime>(data, PostgreSQLDataType.timestampWithTimezone);
+  ParamSql toPostgresValue(DataField? field, DateTime? data) =>
+      ParamSql.param<Object>(data, PostgreSQLDataType.unknownType);
 }
 
 class PostgresqlByteDataType
@@ -226,7 +228,7 @@ class PostgresqlByteDataType
   }
 
   @override
-  ParamSql toPostgresValue(DataField field, Uint8List? data) =>
+  ParamSql toPostgresValue(DataField? field, Uint8List? data) =>
       ParamSql.param<List<int>>(data, PostgreSQLDataType.byteArray);
 }
 
@@ -256,8 +258,8 @@ class PostgresqlJsonMapDataType
   }
 
   @override
-  ParamSql toPostgresValue(DataField field, Map<String, dynamic>? data) {
-    return ParamSql.param(jsonEncode(data), PostgreSQLDataType.jsonb);
+  ParamSql toPostgresValue(DataField? field, Map<String, dynamic>? data) {
+    return ParamSql.param(jsonEncode(data), PostgreSQLDataType.unknownType);
   }
 }
 
@@ -287,7 +289,7 @@ class PostgresqlJsonListDataType
   }
 
   @override
-  ParamSql toPostgresValue(DataField field, List<dynamic>? data) {
-    return ParamSql.param(jsonEncode(data), PostgreSQLDataType.jsonb);
+  ParamSql toPostgresValue(DataField? field, List<dynamic>? data) {
+    return ParamSql.param(jsonEncode(data), PostgreSQLDataType.unknownType);
   }
 }

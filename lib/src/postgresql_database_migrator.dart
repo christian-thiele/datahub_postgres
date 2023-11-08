@@ -17,6 +17,7 @@ class PostgreSQLDatabaseMigrator extends Migrator {
       DataBean bean, DataField field, Expression initialValue) async {
     final type = adapter.findType(field);
     final builder = AddFieldBuilder(
+      adapter,
       _schema.name,
       bean.layoutName,
       field,

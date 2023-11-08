@@ -1,5 +1,6 @@
 import 'package:datahub/datahub.dart';
 import 'package:datahub_postgres/datahub_postgres.dart';
+import 'package:datahub_postgres/src/sql_context.dart';
 import 'package:test/test.dart';
 
 class TableDataBean extends DataBean<void> {
@@ -18,6 +19,12 @@ class TableDataBean extends DataBean<void> {
 
 enum TestEnum { something, test }
 
+class TestSqlContext with SqlContext {
+  @override
+  Set<PostgresqlDataType> get typeRegistry =>
+      PostgreSQLDatabaseAdapter.defaultDataTypes;
+}
+
 void main() {
   final fieldX = DataField<StringDataType>(layoutName: 'fake', name: 'fieldX');
   final schemaTable = SelectFromTable('schema', 'table');
@@ -25,7 +32,7 @@ void main() {
     test(
       'Select',
       _test(
-        SelectBuilder(schemaTable),
+        SelectBuilder(TestSqlContext(), schemaTable),
         'SELECT * FROM "schema"."table"',
       ),
     );
@@ -33,7 +40,8 @@ void main() {
     test(
       'Select filter eq string',
       _test(
-        SelectBuilder(schemaTable)..where(Filter.equals(fieldX, 'valueX')),
+        SelectBuilder(TestSqlContext(), schemaTable)
+          ..where(Filter.equals(fieldX, 'valueX')),
         'SELECT * FROM "schema"."table" WHERE "fake"."fieldX" = @1',
         ['valueX'],
       ),
@@ -42,7 +50,8 @@ void main() {
     test(
       'Select filter eq NULL',
       _test(
-        SelectBuilder(schemaTable)..where(Filter.equals(fieldX, null)),
+        SelectBuilder(TestSqlContext(), schemaTable)
+          ..where(Filter.equals(fieldX, null)),
         'SELECT * FROM "schema"."table" WHERE "fake"."fieldX" IS NULL',
       ),
     );
@@ -50,7 +59,8 @@ void main() {
     test(
       'Select filter !eq NULL',
       _test(
-        SelectBuilder(schemaTable)..where(Filter.notEquals(fieldX, null)),
+        SelectBuilder(TestSqlContext(), schemaTable)
+          ..where(Filter.notEquals(fieldX, null)),
         'SELECT * FROM "schema"."table" WHERE "fake"."fieldX" IS NOT NULL',
       ),
     );
@@ -58,7 +68,7 @@ void main() {
     test(
       'Select filter eq enum',
       _test(
-          SelectBuilder(schemaTable)
+          SelectBuilder(TestSqlContext(), schemaTable)
             ..where(Filter.equals(fieldX, TestEnum.something)),
           'SELECT * FROM "schema"."table" WHERE "fake"."fieldX" = @1',
           ['something']),
@@ -67,7 +77,7 @@ void main() {
     test(
       'Select filter eq string caseInsensitive',
       _test(
-        SelectBuilder(schemaTable)
+        SelectBuilder(TestSqlContext(), schemaTable)
           ..where(CompareFilter(
               fieldX, CompareType.equals, ValueExpression('valueX'),
               caseSensitive: false)),
@@ -79,7 +89,7 @@ void main() {
     test(
       'Select filter eq string contains',
       _test(
-          SelectBuilder(schemaTable)
+          SelectBuilder(TestSqlContext(), schemaTable)
             ..where(CompareFilter(
                 fieldX, CompareType.contains, ValueExpression('valueX'))),
           'SELECT * FROM "schema"."table" WHERE "fake"."fieldX" LIKE \'%\' || @1 || \'%\'',
@@ -89,7 +99,7 @@ void main() {
     test(
       'Select filter eq string contains caseInsensitive',
       _test(
-          SelectBuilder(schemaTable)
+          SelectBuilder(TestSqlContext(), schemaTable)
             ..where(CompareFilter(
                 fieldX, CompareType.contains, ValueExpression('valueX'),
                 caseSensitive: false)),
@@ -100,7 +110,8 @@ void main() {
     test(
       'Select filter eq int',
       _test(
-        SelectBuilder(schemaTable)..where(Filter.equals(fieldX, 20)),
+        SelectBuilder(TestSqlContext(), schemaTable)
+          ..where(Filter.equals(fieldX, 20)),
         'SELECT * FROM "schema"."table" WHERE "fake"."fieldX" = @1',
         [20],
       ),
@@ -109,7 +120,8 @@ void main() {
     test(
       'Select filter eq double',
       _test(
-        SelectBuilder(schemaTable)..where(Filter.equals(fieldX, 20.12)),
+        SelectBuilder(TestSqlContext(), schemaTable)
+          ..where(Filter.equals(fieldX, 20.12)),
         'SELECT * FROM "schema"."table" WHERE "fake"."fieldX" = @1',
         [20.12],
       ),
@@ -118,7 +130,7 @@ void main() {
     test(
       'Select group by add',
       _test(
-        SelectBuilder(schemaTable)
+        SelectBuilder(TestSqlContext(), schemaTable)
           ..groupBy([OperationExpression(fieldX, fieldX, OperationType.add)]),
         'SELECT * FROM "schema"."table" GROUP BY ("fake"."fieldX" + "fake"."fieldX")',
       ),
@@ -129,21 +141,24 @@ void main() {
     test(
       'Select with total row_number()',
       _test(
-          SelectBuilder(SelectFrom.fromQuerySource(
-            'schema',
-            SubQuery(
-                TableDataBean(),
-                [
-                  WildcardSelect(),
-                  ExpressionSelect(
-                    // ignore: deprecated_member_use
-                    SqlExpression('row_number() OVER (order by something)'),
-                    'num',
-                  ),
-                ],
-                alias: 'sub',
-                filter: Filter.equals(fieldX, 'valueY')),
-          ))
+          SelectBuilder(
+              TestSqlContext(),
+              SelectFrom.fromQuerySource(
+                TestSqlContext(),
+                'schema',
+                SubQuery(
+                    TableDataBean(),
+                    [
+                      WildcardSelect(),
+                      ExpressionSelect(
+                        // ignore: deprecated_member_use
+                        SqlExpression('row_number() OVER (order by something)'),
+                        'num',
+                      ),
+                    ],
+                    alias: 'sub',
+                    filter: Filter.equals(fieldX, 'valueY')),
+              ))
             ..where(Filter.equals(fieldX, 'valueX')),
           'SELECT * FROM (SELECT *, row_number() OVER (order by something) AS "num" FROM "schema"."table" WHERE "fake"."fieldX" = @1) "sub" WHERE "fake"."fieldX" = @2',
           ['valueY', 'valueX']),

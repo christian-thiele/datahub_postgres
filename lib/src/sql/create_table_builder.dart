@@ -1,19 +1,20 @@
 //TODO collations, constraints, ...
 //maybe even inheritance
 import 'package:datahub/persistence.dart';
+import 'package:datahub_postgres/src/sql_context.dart';
 
 import '../postgresql_database_adapter.dart';
 import 'param_sql.dart';
 import 'sql_builder.dart';
 
 class CreateTableBuilder implements SqlBuilder {
-  final PostgreSQLDatabaseAdapter adapter;
+  final SqlContext context;
   final bool ifNotExists;
   final String schemaName;
   final String tableName;
   final List<DataField> fields = [];
 
-  CreateTableBuilder(this.adapter, this.schemaName, this.tableName,
+  CreateTableBuilder(this.context, this.schemaName, this.tableName,
       {this.ifNotExists = false});
 
   factory CreateTableBuilder.fromLayout(
@@ -32,7 +33,7 @@ class CreateTableBuilder implements SqlBuilder {
     }
 
     sql.addSql(
-        '${SqlBuilder.escapeName(schemaName)}.${SqlBuilder.escapeName(tableName)} (');
+        '${SqlContext.escapeName(schemaName)}.${SqlContext.escapeName(tableName)} (');
 
     sql.add(fields.map(_createFieldSql).joinSql(','));
 
@@ -42,8 +43,8 @@ class CreateTableBuilder implements SqlBuilder {
   }
 
   ParamSql _createFieldSql(DataField field) {
-    final type = adapter.findType(field);
-    final sql = ParamSql(SqlBuilder.escapeName(field.name));
+    final type = context.findType(field);
+    final sql = ParamSql(SqlContext.escapeName(field.name));
     sql.addSql(' ');
     sql.add(type.getTypeSql(field));
     if (field is PrimaryKey) {

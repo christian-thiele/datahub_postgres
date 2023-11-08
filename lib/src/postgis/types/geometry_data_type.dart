@@ -29,7 +29,7 @@ class PostgresqlGeometryDataType
   }
 
   @override
-  ParamSql toPostgresValue(DataField<DataType> field, Geometry? data) {
+  ParamSql toPostgresValue(DataField<DataType>? field, Geometry? data) {
     if (data != null) {
       final sql = ParamSql('st_geomfromewkb');
       sql.add(

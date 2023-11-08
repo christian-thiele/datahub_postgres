@@ -1,18 +1,18 @@
 import 'package:datahub/persistence.dart';
-import '../type_registry.dart';
+import '../sql_context.dart';
 
 import 'param_sql.dart';
 import 'select_from.dart';
 import 'sql_builder.dart';
 
-class UpdateBuilder extends SqlBuilder {
-  final TypeRegistry typeRegistry;
+class UpdateBuilder implements SqlBuilder {
+  final SqlContext context;
 
   final SelectFrom from;
   final Map<DataField, dynamic> _values = {};
   Filter _filter = Filter.empty;
 
-  UpdateBuilder(this.typeRegistry, this.from);
+  UpdateBuilder(this.context, this.from);
 
   void values(Map<DataField, dynamic> entryValues) {
     _values.addAll(entryValues);
@@ -26,8 +26,8 @@ class UpdateBuilder extends SqlBuilder {
   ParamSql buildSql() {
     final sql = ParamSql('UPDATE ');
     final values = _values.entries.map((e) {
-      final fieldName = SqlBuilder.escapeName(e.key.name);
-      final type = typeRegistry.findType(e.key);
+      final fieldName = SqlContext.escapeName(e.key.name);
+      final type = context.findType(e.key);
       final value = type.toPostgresValue(e.key, e.value);
       final sql = ParamSql('$fieldName = ');
       sql.add(value);
@@ -40,7 +40,7 @@ class UpdateBuilder extends SqlBuilder {
 
     if (!_filter.isEmpty) {
       sql.addSql(' WHERE ');
-      sql.add(SqlBuilder.filterSql(_filter));
+      sql.add(context.filterSql(_filter));
     }
 
     return sql;

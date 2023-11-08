@@ -9,7 +9,7 @@ import 'package:datahub_postgres/datahub_postgres.dart';
 /// the SRID. If use_spheroid is false, a faster spherical calculation is used.
 Expression stDistance(Expression g1, Expression g2,
         {Expression? useSpheroid}) =>
-    SqlExpression.function('ST_Distance', [
+    FunctionExpression('ST_Distance', [
       g1,
       g2,
       if (useSpheroid != null) useSpheroid,
@@ -26,7 +26,7 @@ Expression stDistance(Expression g1, Expression g2,
 /// measure on the sphere.
 Expression stDWithin(Expression g1, Expression g2, Expression tolerance,
         {Expression? useSpheroid}) =>
-    SqlExpression.function('ST_DWithin', [
+    FunctionExpression('ST_DWithin', [
       g1,
       g2,
       tolerance,

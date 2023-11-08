@@ -4,6 +4,7 @@ import 'package:datahub/persistence.dart';
 import 'package:datahub/services.dart';
 
 import 'package:postgres/postgres.dart' as postgres;
+import 'package:postgres/postgres_v3_experimental.dart';
 
 import 'postgresql_data_types.dart';
 import 'postgresql_database_connection.dart';
@@ -11,7 +12,8 @@ import 'postgresql_database_context.dart';
 import 'postgresql_database_migrator.dart';
 
 import 'sql/sql.dart';
-import 'type_registry.dart';
+import 'expressions.dart';
+import 'sql_context.dart';
 
 //TODO factor out postgreSQL related code to separate package
 
@@ -22,7 +24,7 @@ const metaTable = '_datahub_meta';
 //TODO docs for config
 class PostgreSQLDatabaseAdapter
     extends DatabaseAdapter<PostgreSQLDatabaseConnection>
-    implements TypeRegistry {
+    with SqlContext {
   static const schemaVersionKey = 'schema_version';
 
   static const defaultDataTypes = <PostgresqlDataType>{
@@ -49,12 +51,13 @@ class PostgreSQLDatabaseAdapter
   late final isUnixSocket = config<bool?>('isUnixSocket') ?? false;
   late final ignoreMigration = config<bool?>('ignoreMigration') ?? false;
 
-  final _typeRegistry = <PostgresqlDataType>{};
+  @override
+  final typeRegistry = <PostgresqlDataType>{};
 
   PostgreSQLDatabaseAdapter(super.path, super.schema,
       {List<PostgresqlDataType> types = const []}) {
-    _typeRegistry.addAll(types);
-    _typeRegistry.addAll(defaultDataTypes);
+    typeRegistry.addAll(types);
+    typeRegistry.addAll(defaultDataTypes);
   }
 
   @override
@@ -123,13 +126,6 @@ class PostgreSQLDatabaseAdapter
   }
 
   @override
-  PostgresqlDataType findType(DataField field) {
-    return _typeRegistry.firstOrNullWhere((e) => field.type == e.baseType) ??
-        (throw PersistenceException(
-            'No type registered for ${field.type} in adapter.'));
-  }
-
-  @override
   Future<PostgreSQLDatabaseConnection> openConnection() async {
     final connection = postgres.PostgreSQLConnection(
       host,
@@ -156,4 +152,5 @@ class PostgreSQLDatabaseAdapter
     );
     return result.isNotEmpty;
   }
+
 }

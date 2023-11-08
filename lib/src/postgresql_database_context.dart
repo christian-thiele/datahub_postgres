@@ -1,5 +1,6 @@
 import 'package:boost/boost.dart';
 import 'package:datahub/persistence.dart';
+import 'package:datahub_postgres/src/sql_context.dart';
 import 'package:postgres/postgres.dart' as postgres;
 
 import 'postgresql_database_adapter.dart';
@@ -90,8 +91,8 @@ class PostgreSQLDatabaseContext implements DatabaseContext {
     int limit = -1,
     bool forUpdate = false,
   }) async {
-    final from = SelectFrom.fromQuerySource(_adapter.schema.name, bean);
-    final builder = SelectBuilder(from)
+    final from = SelectFrom.fromQuerySource(_adapter, _adapter.schema.name, bean);
+    final builder = SelectBuilder(_adapter, from)
       ..select([const WildcardSelect()])
       ..distinct(distinct)
       ..where(filter)
@@ -111,7 +112,7 @@ class PostgreSQLDatabaseContext implements DatabaseContext {
     bool forUpdate = false,
   }) async {
     final from = SelectFromTable(_adapter.schema.name, bean.layoutName);
-    final builder = SelectBuilder(from)
+    final builder = SelectBuilder(_adapter, from)
       ..where(Filter.equals(bean.primaryKey, id))
       ..forUpdate(forUpdate);
     final result = await querySql(builder.buildSql());
@@ -125,7 +126,7 @@ class PostgreSQLDatabaseContext implements DatabaseContext {
     TPrimaryKey id,
   ) async {
     final from = SelectFromTable(_adapter.schema.name, bean.layoutName);
-    final builder = SelectBuilder(from)
+    final builder = SelectBuilder(_adapter, from)
       ..select([bean.primaryKey])
       ..where(Filter.equals(bean.primaryKey, id));
     final result = await querySql(builder.buildSql());
@@ -140,7 +141,7 @@ class PostgreSQLDatabaseContext implements DatabaseContext {
     final primaryKey = bean is PrimaryKeyDataBean ? bean.primaryKey : null;
 
     final returning =
-        primaryKey != null ? SqlBuilder.escapeName(primaryKey.name) : null;
+        primaryKey != null ? SqlContext.escapeName(primaryKey.name) : null;
 
     final withPrimary =
         !(primaryKey?.type == IntDataType && primaryKey?.autoIncrement == true);
@@ -186,7 +187,7 @@ class PostgreSQLDatabaseContext implements DatabaseContext {
     Map<DataField, dynamic> values,
     Filter filter,
   ) async {
-    final from = SelectFrom.fromQuerySource(_adapter.schema.name, source);
+    final from = SelectFrom.fromQuerySource(_adapter, _adapter.schema.name, source);
     final builder = UpdateBuilder(_adapter, from)
       ..values(values)
       ..where(filter);
@@ -197,7 +198,7 @@ class PostgreSQLDatabaseContext implements DatabaseContext {
   Future<void> delete<TDao extends PrimaryKeyDao>(TDao object) async {
     final bean = object.bean;
     final from = SelectFromTable(_adapter.schema.name, bean.layoutName);
-    final builder = DeleteBuilder(from)
+    final builder = DeleteBuilder(_adapter, from)
       ..where(_pkFilter(bean, object.getPrimaryKey()));
     await execute(builder.buildSql());
   }
@@ -208,14 +209,14 @@ class PostgreSQLDatabaseContext implements DatabaseContext {
     dynamic id,
   ) async {
     final from = SelectFromTable(_adapter.schema.name, bean.layoutName);
-    final builder = DeleteBuilder(from)..where(_pkFilter(bean, id));
+    final builder = DeleteBuilder(_adapter, from)..where(_pkFilter(bean, id));
     await execute(builder.buildSql());
   }
 
   @override
   Future<int> deleteWhere(DataBean bean, Filter filter) async {
     final from = SelectFromTable(_adapter.schema.name, bean.layoutName);
-    final builder = DeleteBuilder(from)..where(filter);
+    final builder = DeleteBuilder(_adapter, from)..where(filter);
     return await execute(builder.buildSql());
   }
 
@@ -231,8 +232,8 @@ class PostgreSQLDatabaseContext implements DatabaseContext {
     int limit = -1,
     bool forUpdate = false,
   }) async {
-    final from = SelectFrom.fromQuerySource(_adapter.schema.name, source);
-    final builder = SelectBuilder(from)
+    final from = SelectFrom.fromQuerySource(_adapter, _adapter.schema.name, source);
+    final builder = SelectBuilder(_adapter, from)
       ..where(filter)
       ..orderBy(sort)
       ..offset(offset)
