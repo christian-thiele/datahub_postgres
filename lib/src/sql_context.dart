@@ -35,11 +35,13 @@ mixin SqlContext {
           break;
       }
     } else if (filter is CompareFilter) {
-      // special case: isIn empty list (produces error, always false anyway)
+      // special case: isIn empty list / null (always false)
       if (filter.type == CompareType.isIn &&
-          filter.right is ValueExpression &&
-          (filter.right as ValueExpression).value is Iterable &&
-          ((filter.right as ValueExpression).value as Iterable).isEmpty) {
+              (filter.right is ValueExpression &&
+                  (filter.right as ValueExpression).value is Iterable &&
+                  ((filter.right as ValueExpression).value as Iterable)
+                      .isEmpty) ||
+          filter.right == ValueExpression(null)) {
         return ParamSql('FALSE');
       }
 
@@ -87,7 +89,7 @@ mixin SqlContext {
           sql.addSql(' <= ');
           break;
         case CompareType.isIn:
-          sql.addSql(' IN ');
+          sql.addSql(' = ');
           break;
         default:
           throw PersistenceException(
@@ -102,6 +104,16 @@ mixin SqlContext {
           sql.add(expressionSql(filter.right));
           sql.add(ParamSql(" || '%'"));
           break;
+        case CompareType.isIn:
+          sql.addSql('ANY(');
+          if (filter.right is ValueExpression &&
+              (filter.right as ValueExpression).value is List) {
+            final list = (filter.right as ValueExpression).value as List;
+            sql.addParam(list, PostgreSQLDataType.unknownType);
+          } else {
+            sql.add(expressionSql(filter.right));
+          }
+          sql.addSql(')');
         default:
           if (filter.caseSensitive ||
               filter.right == const ValueExpression(null)) {
@@ -261,14 +273,14 @@ mixin SqlContext {
     }
 
     if (name.contains('"')) {
-      //TODO check for more invalid characters
+//TODO check for more invalid characters
       throw PersistenceException(
           'Field name "$name" contains invalid characters.');
     }
 
-    //TODO check for forbidden names like ANALYZE, BETWEEN, ...
+//TODO check for forbidden names like ANALYZE, BETWEEN, ...
 
-    //TODO check for first letter restriction
+//TODO check for first letter restriction
 
     return '"$name"';
   }

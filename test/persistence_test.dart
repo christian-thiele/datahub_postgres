@@ -74,7 +74,7 @@ void main() {
       await repo.deleteAll();
     }));
 
-    test('Filter Eq', host.test(() async {
+    test('Filter equals', host.test(() async {
       final repo = resolve<CRUDRepository<TestObject, int>>();
       await _populate(repo);
       expect(
@@ -112,6 +112,52 @@ void main() {
               filter: TestObjectDataBean.bytes
                   .equals(Uint8List.fromList([1, 2, 3, 245, 244, 233]))),
           0);
+    }));
+
+    test('Filter isIn', host.test(() async {
+      final repo = resolve<CRUDRepository<TestObject, int>>();
+      await _populate(repo);
+      expect(
+        await repo.count(
+            filter: TestObjectDataBean.string.isIn(['abc', 'string'])),
+        1,
+      );
+      expect(
+        await repo.count(
+            filter: TestObjectDataBean.string.isIn(['abc', '123'])),
+        0,
+      );
+      expect(
+        await repo.count(filter: TestObjectDataBean.string.isIn(['test'])),
+        1,
+      );
+      expect(
+        await repo.count(filter: TestObjectDataBean.string.isIn(null)),
+        0,
+      );
+      expect(
+        await repo.count(filter: TestObjectDataBean.string.isIn([])),
+        0,
+      );
+      expect(
+        await repo.count(filter: TestObjectDataBean.intNumber.isIn([2, 3, 4])),
+        2,
+      );
+      expect(
+        await repo.count(filter: TestObjectDataBean.intNumber.isIn([2, 3, 1])),
+        0,
+      );
+      expect(
+        await repo.count(
+            filter: TestObjectDataBean.doubleNumber.isIn([2.3, 12.3, 1])),
+        2,
+      );
+      expect(
+        await repo.count(
+            filter:
+                TestObjectDataBean.doubleNumber.isIn([12.2, 2.3, 12.300001])),
+        0,
+      );
     }));
   });
 }

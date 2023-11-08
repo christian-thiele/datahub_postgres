@@ -17,7 +17,7 @@ class MultiPolygon extends Geometry {
       srid,
       List.generate(
         length,
-        (i) => Geometry.read(srid, reader, hasZ, hasM) as Polygon,
+        (i) => Polygon.read(srid, reader, hasZ, hasM),
       ),
       hasZ,
       hasM,

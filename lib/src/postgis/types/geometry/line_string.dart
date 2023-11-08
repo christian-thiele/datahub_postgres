@@ -17,7 +17,7 @@ class LineString extends Geometry {
       srid,
       List.generate(
         length,
-        (i) => Geometry.read(srid, reader, hasZ, hasM) as Point,
+        (i) => Point.read(srid, reader, hasZ, hasM),
       ),
       hasZ,
       hasM,

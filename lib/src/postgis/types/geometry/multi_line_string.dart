@@ -17,7 +17,7 @@ class MultiLineString extends Geometry {
       srid,
       List.generate(
         length,
-        (i) => Geometry.read(srid, reader, hasZ, hasM) as LineString,
+        (i) => LineString.read(srid, reader, hasZ, hasM),
       ),
       hasZ,
       hasM,

@@ -15,8 +15,7 @@ class MultiPoint extends Geometry {
     final length = reader.readUint32();
     return MultiPoint(
       srid,
-      List.generate(
-          length, (i) => Geometry.read(srid, reader, hasZ, hasM) as Point),
+      List.generate(length, (i) => Point.read(srid, reader, hasZ, hasM)),
       hasZ,
       hasM,
     );
