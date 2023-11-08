@@ -7,7 +7,7 @@ import 'package:datahub_postgres/datahub_postgres.dart';
 /// For geography types defaults to return the minimum geodesic distance
 /// between two geographies in meters, compute on the spheroid determined by
 /// the SRID. If use_spheroid is false, a faster spherical calculation is used.
-Expression stDistance(Expression g1, Expression g2,
+FunctionExpression stDistance(Expression g1, Expression g2,
         {Expression? useSpheroid}) =>
     FunctionExpression('ST_Distance', [
       g1,
@@ -24,7 +24,7 @@ Expression stDistance(Expression g1, Expression g2,
 /// For geography: units are in meters and distance measurement defaults to
 /// use_spheroid = true. For faster evaluation use use_spheroid = false to
 /// measure on the sphere.
-Expression stDWithin(Expression g1, Expression g2, Expression tolerance,
+FunctionExpression stDWithin(Expression g1, Expression g2, Expression tolerance,
         {Expression? useSpheroid}) =>
     FunctionExpression('ST_DWithin', [
       g1,

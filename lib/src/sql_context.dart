@@ -113,8 +113,8 @@ mixin SqlContext {
           break;
       }
       // ignore: deprecated_member_use
-    } else if (filter is SqlExpression) {
-      sql.add(filter);
+    } else if (filter is Expression) {
+      sql.add(expressionSql(filter as Expression));
     } else {
       throw PersistenceException('PostgreSQL implementation does not '
           'support filter type ${filter.runtimeType}.');
@@ -243,7 +243,7 @@ mixin SqlContext {
       return sql;
       // ignore: deprecated_member_use
     } else if (expression is FunctionExpression) {
-      final sql = SqlExpression(expression.name);
+      final sql = ParamSql(expression.name);
       sql.add(expression.arguments.map(expressionSql).joinSql(', ')..wrap());
       return sql;
     } else if (expression is SqlExpression) {

@@ -1,6 +1,5 @@
 import 'package:datahub/datahub.dart';
 import 'package:datahub_postgres/datahub_postgres.dart';
-import 'package:datahub_postgres/src/sql_context.dart';
 
 class SqlExpression extends ParamSql implements Expression, Filter {
   SqlExpression(super.sql);

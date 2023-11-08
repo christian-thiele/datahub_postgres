@@ -1,6 +1,5 @@
 import 'dart:typed_data';
 
-import 'package:postgres/postgres.dart';
 import 'package:datahub/persistence.dart';
 import 'package:datahub_postgres/datahub_postgres.dart';
 
