@@ -1,6 +1,6 @@
 name: datahub_postgres
 description: DataHub PostgreSQL Extension
-version: 0.1.0-dev.10
+version: 0.1.0-dev.11
 homepage: https://datahubproject.net
 repository: https://github.com/christian-thiele/datahub_postgres
 
@@ -10,17 +10,11 @@ environment:
 dependencies:
   boost: ^1.8.10
   buffer: ^1.2.2
-  datahub: ^0.17.0-dev.54
+  datahub: ^0.17.0-dev.57
   postgres: ^2.6.3
 
 dev_dependencies:
   lints: ^2.0.0
   test: ^1.21.0
-  datahub_codegen: ^0.17.0-dev.16
+  datahub_codegen: ^0.17.0-dev.17
   build_runner: ^2.4.6
-
-dependency_overrides:
-  datahub:
-    path: ../datahub
-  datahub_codegen:
-    path: ../datahub_codegen
