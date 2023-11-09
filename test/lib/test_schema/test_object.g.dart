@@ -17,6 +17,8 @@ extension TestObjectCopyExtension on TestObject {
     Map<String, dynamic>? jsonMap,
     Uint8List? bytes,
     DateTime? timestamp,
+    CustomEnum? enumValue,
+    List<CustomEnum>? enumValues,
   }) {
     return TestObject(
       id: id ?? this.id,
@@ -28,6 +30,8 @@ extension TestObjectCopyExtension on TestObject {
       jsonMap: jsonMap ?? this.jsonMap,
       bytes: bytes ?? this.bytes,
       timestamp: timestamp ?? this.timestamp,
+      enumValue: enumValue ?? this.enumValue,
+      enumValues: enumValues ?? this.enumValues,
     );
   }
 }
@@ -112,6 +116,20 @@ class _TestObjectDataBeanImpl extends PrimaryKeyDataBean<TestObject, int> {
     length: 0,
   );
 
+  final enumValue = DataField<StringDataType>(
+    layoutName: 'test_object',
+    name: 'enum_value',
+    nullable: false,
+    length: 0,
+  );
+
+  final enumValues = DataField<StringArrayDataType>(
+    layoutName: 'test_object',
+    name: 'enum_values',
+    nullable: false,
+    length: 0,
+  );
+
   @override
   late final fields = [
     id,
@@ -123,6 +141,8 @@ class _TestObjectDataBeanImpl extends PrimaryKeyDataBean<TestObject, int> {
     jsonMap,
     bytes,
     timestamp,
+    enumValue,
+    enumValues,
   ];
 
   @override
@@ -138,6 +158,8 @@ class _TestObjectDataBeanImpl extends PrimaryKeyDataBean<TestObject, int> {
       jsonMap: dao.jsonMap,
       bytes: dao.bytes,
       timestamp: dao.timestamp,
+      enumValue: dao.enumValue.name,
+      enumValues: dao.enumValues,
     };
   }
 
@@ -153,6 +175,10 @@ class _TestObjectDataBeanImpl extends PrimaryKeyDataBean<TestObject, int> {
       jsonMap: decodeMapTyped<Map<String, dynamic>, dynamic>(data['json_map']),
       bytes: data['bytes'],
       timestamp: data['timestamp'],
+      enumValue:
+          CustomEnum.values.firstWhere((v) => v.name == (data['enum_value'])),
+      enumValues: decodeList<List<CustomEnum>, CustomEnum>(data['enum_values'],
+          (v, n) => CustomEnum.values.firstWhere((e) => e.name == v)),
     );
   }
 }

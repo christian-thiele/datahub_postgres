@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:datahub/datahub.dart';
 
+import 'custom_enum.dart';
+
 part 'test_object.g.dart';
 
 @DaoType()
@@ -16,6 +18,8 @@ class TestObject extends _Dao {
   final Map<String, dynamic> jsonMap;
   final Uint8List bytes;
   final DateTime timestamp;
+  final CustomEnum enumValue;
+  final List<CustomEnum> enumValues;
 
   TestObject({
     this.id = 0,
@@ -27,5 +31,7 @@ class TestObject extends _Dao {
     required this.jsonMap,
     required this.bytes,
     required this.timestamp,
+    required this.enumValue,
+    required this.enumValues,
   });
 }

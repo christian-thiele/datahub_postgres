@@ -30,6 +30,10 @@ class PostgreSQLDatabaseAdapter
     PostgresqlDoubleDataType(),
     PostgresqlDateTimeDataType(),
     PostgresqlByteDataType(),
+    PostgresqlStringArrayDataType(),
+    PostgresqlIntArrayDataType(),
+    PostgresqlDoubleArrayDataType(),
+    PostgresqlBoolArrayDataType(),
     PostgresqlJsonListDataType(),
     PostgresqlJsonMapDataType(),
   };

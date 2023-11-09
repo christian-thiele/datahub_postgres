@@ -293,3 +293,137 @@ class PostgresqlJsonListDataType
     return ParamSql.param(jsonEncode(data), PostgreSQLDataType.unknownType);
   }
 }
+
+class PostgresqlStringArrayDataType
+    extends PostgresqlDataType<List<String>, StringArrayDataType> {
+  const PostgresqlStringArrayDataType();
+
+  @override
+  ParamSql getTypeSql(DataField field) {
+    final length = field.length == 0 ? 255 : field.length;
+    return ParamSql('varchar($length)[]');
+  }
+
+  @override
+  List<String>? toDaoValue(data) {
+    if (data == null) {
+      return null;
+    }
+
+    if (data is List<String>) {
+      return data;
+    }
+
+    throw PersistenceException(
+        'Invalid result type ${data.runtimeType} for PostgresqlStringArrayDataType.');
+  }
+
+  @override
+  ParamSql toPostgresValue(DataField? field, List<dynamic>? data) {
+    final sanitized = data?.map((e) => e is Enum ? e.name : e.toString()).toList();
+    return ParamSql.param(sanitized, PostgreSQLDataType.unknownType);
+  }
+}
+
+class PostgresqlIntArrayDataType
+    extends PostgresqlDataType<List<int>, IntArrayDataType> {
+  const PostgresqlIntArrayDataType();
+
+  @override
+  ParamSql getTypeSql(DataField field) {
+    if (field.length == 16) {
+      return ParamSql('int2[]');
+    } else if (field.length == 32) {
+      return ParamSql('int4[]');
+    } else if (field.length == 64 || field.length == 0) {
+      return ParamSql('int8[]');
+    } else {
+      throw PersistenceException(
+          'PostgreSQL implementation does not support int length ${field.length}.'
+          ' Only 16, 32 or 64 allowed.)');
+    }
+  }
+
+  @override
+  List<int>? toDaoValue(data) {
+    if (data == null) {
+      return null;
+    }
+
+    if (data is List<int>) {
+      return data;
+    }
+
+    throw PersistenceException(
+        'Invalid result type ${data.runtimeType} for PostgresqlIntArrayDataType.');
+  }
+
+  @override
+  ParamSql toPostgresValue(DataField? field, List<int>? data) {
+    return ParamSql.param(data, PostgreSQLDataType.unknownType);
+  }
+}
+
+class PostgresqlDoubleArrayDataType
+    extends PostgresqlDataType<List<double>, DoubleArrayDataType> {
+  const PostgresqlDoubleArrayDataType();
+
+  @override
+  ParamSql getTypeSql(DataField field) {
+    if (field.length == 32) {
+      return ParamSql('real[]');
+    } else if (field.length == 64 || field.length == 0) {
+      return ParamSql('double precision[]');
+    } else {
+      throw PersistenceException(
+          'PostgreSQL implementation does not support int length ${field.length}.'
+          'Only 16, 32 or 64 allowed.)');
+    }
+  }
+
+  @override
+  List<double>? toDaoValue(data) {
+    if (data == null) {
+      return null;
+    }
+
+    if (data is List<double>) {
+      return data;
+    }
+
+    throw PersistenceException(
+        'Invalid result type ${data.runtimeType} for PostgresqlDoubleArrayDataType.');
+  }
+
+  @override
+  ParamSql toPostgresValue(DataField? field, List<double>? data) {
+    return ParamSql.param(data, PostgreSQLDataType.unknownType);
+  }
+}
+
+class PostgresqlBoolArrayDataType
+    extends PostgresqlDataType<List<bool>, BoolArrayDataType> {
+  const PostgresqlBoolArrayDataType();
+
+  @override
+  ParamSql getTypeSql(DataField field) => ParamSql('boolean[]');
+
+  @override
+  List<bool>? toDaoValue(data) {
+    if (data == null) {
+      return null;
+    }
+
+    if (data is List<bool>) {
+      return data;
+    }
+
+    throw PersistenceException(
+        'Invalid result type ${data.runtimeType} for PostgresqlBoolArrayDataType.');
+  }
+
+  @override
+  ParamSql toPostgresValue(DataField? field, List<bool>? data) {
+    return ParamSql.param(data, PostgreSQLDataType.unknownType);
+  }
+}

@@ -37,11 +37,11 @@ mixin SqlContext {
     } else if (filter is CompareFilter) {
       // special case: isIn empty list / null (always false)
       if (filter.type == CompareType.isIn &&
-              (filter.right is ValueExpression &&
+          (filter.right is ValueExpression &&
                   (filter.right as ValueExpression).value is Iterable &&
                   ((filter.right as ValueExpression).value as Iterable)
-                      .isEmpty) ||
-          filter.right == ValueExpression(null)) {
+                      .isEmpty ||
+              filter.right == ValueExpression(null))) {
         return ParamSql('FALSE');
       }
 
@@ -109,7 +109,8 @@ mixin SqlContext {
           if (filter.right is ValueExpression &&
               (filter.right as ValueExpression).value is List) {
             final list = (filter.right as ValueExpression).value as List;
-            sql.addParam(list, PostgreSQLDataType.unknownType);
+            final sanitized = list.map((e) => e is Enum ? e.name : e).toList();
+            sql.addParam(sanitized, PostgreSQLDataType.unknownType);
           } else {
             sql.add(expressionSql(filter.right));
           }

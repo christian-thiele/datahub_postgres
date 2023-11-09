@@ -1,6 +1,8 @@
 import 'package:datahub/datahub.dart';
 import 'package:datahub_postgres/postgis.dart';
 
+import '../test_schema/custom_enum.dart';
+
 part 'text_entry.g.dart';
 
 @DaoType()
