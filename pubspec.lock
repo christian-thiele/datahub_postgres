@@ -213,10 +213,10 @@ packages:
     dependency: "direct dev"
     description:
       name: datahub_codegen
-      sha256: ed7b14c14043e85d3f86a78f904c20b9627eae3a8a67dc29c391878a9a358b28
+      sha256: "45791a81e93b9f100f2c08cd2e106b50024c9518047dfa13ff76e92d3ead11c2"
       url: "https://pub.dev"
     source: hosted
-    version: "0.17.0-dev.17"
+    version: "0.17.0-dev.18"
   file:
     dependency: transitive
     description:

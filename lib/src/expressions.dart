@@ -23,3 +23,11 @@ class FunctionExpression implements Expression, Filter {
   @override
   Filter reduce() => this;
 }
+
+class CustomOperatorExpression implements Expression {
+  final String operatorSql;
+  final Expression left;
+  final Expression right;
+
+  CustomOperatorExpression(this.left, this.operatorSql, this.right);
+}

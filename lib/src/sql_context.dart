@@ -261,6 +261,11 @@ mixin SqlContext {
       return sql;
     } else if (expression is SqlExpression) {
       return expression;
+    } else if (expression is CustomOperatorExpression) {
+      final sql = expressionSql(expression.left);
+      sql.add(SqlExpression(expression.operatorSql));
+      sql.add(expressionSql(expression.right));
+      return sql;
     } else {
       throw PersistenceException('PostgreSQL implementation does not '
           'support Expression type ${expression.runtimeType}.');
