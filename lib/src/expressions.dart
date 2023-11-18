@@ -24,10 +24,16 @@ class FunctionExpression implements Expression, Filter {
   Filter reduce() => this;
 }
 
-class CustomOperatorExpression implements Expression {
+class CustomOperatorExpression implements Expression, Filter {
   final String operatorSql;
   final Expression left;
   final Expression right;
 
   CustomOperatorExpression(this.left, this.operatorSql, this.right);
+
+  @override
+  bool get isEmpty => false;
+
+  @override
+  Filter reduce() => this;
 }
