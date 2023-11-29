@@ -13,7 +13,7 @@ class DeleteBuilder implements SqlBuilder {
   DeleteBuilder(this.context, this.from);
 
   void where(Filter filter) {
-    _filter = filter;
+    _filter = filter.reduce();
   }
 
   @override

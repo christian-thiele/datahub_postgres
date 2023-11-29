@@ -19,7 +19,7 @@ class UpdateBuilder implements SqlBuilder {
   }
 
   void where(Filter filter) {
-    _filter = filter;
+    _filter = filter.reduce();
   }
 
   @override
