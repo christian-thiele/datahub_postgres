@@ -24,7 +24,10 @@ class PostgreSQLDatabaseMigrator extends Migrator {
       type,
       initialValue,
     );
-    await _context.execute(builder.buildSql());
+    final commands = builder.buildSql();
+    for (final command in commands) {
+      await _context.execute(command);
+    }
   }
 
   @override

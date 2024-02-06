@@ -3,9 +3,8 @@ import 'package:datahub_postgres/src/sql_context.dart';
 
 import '../postgresql_data_types.dart';
 import 'param_sql.dart';
-import 'sql_builder.dart';
 
-class AddFieldBuilder implements SqlBuilder {
+class AddFieldBuilder {
   final SqlContext context;
   final String schemaName;
   final String tableName;
@@ -27,28 +26,33 @@ class AddFieldBuilder implements SqlBuilder {
     }
   }
 
-  @override
-  ParamSql buildSql() {
+  List<ParamSql> buildSql() {
+    final commands = <ParamSql>[];
     final tableRef =
         '${SqlContext.escapeName(schemaName)}.${SqlContext.escapeName(tableName)}';
     final colName = SqlContext.escapeName(field.name);
 
-    final sql = ParamSql(
+    final c1 = ParamSql(
         'ALTER TABLE $tableRef ADD COLUMN $colName ${type.getTypeSql(field)}');
 
     if (field is PrimaryKey) {
-      sql.addSql(' PRIMARY KEY');
+      c1.addSql(' PRIMARY KEY');
     }
 
+    commands.add(c1);
+
     if (initialValue != null) {
-      sql.addSql('; UPDATE $tableRef SET $colName = ');
-      sql.add(context.expressionSql(initialValue));
+      final c2 = ParamSql('UPDATE $tableRef SET $colName = ');
+      c2.add(context.expressionSql(initialValue));
+      commands.add(c2);
     }
 
     if (field is! PrimaryKey && !field.nullable) {
-      sql.addSql('; ALTER TABLE $tableRef ALTER COLUMN $colName SET NOT NULL');
+      final c3 =
+          ParamSql('ALTER TABLE $tableRef ALTER COLUMN $colName SET NOT NULL');
+      commands.add(c3);
     }
 
-    return sql;
+    return commands;
   }
 }
