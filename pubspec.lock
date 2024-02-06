@@ -205,18 +205,18 @@ packages:
     dependency: "direct main"
     description:
       name: datahub
-      sha256: "88e4f43fc59787ac11d466f24696815976fd5ef6f69e1d2b2d5207580a2547bb"
+      sha256: cf4043718bbd7332b1d1e2ebff9648307243bac3e235a4b4ea5de47c3a358651
       url: "https://pub.dev"
     source: hosted
-    version: "0.17.0-dev.57"
+    version: "0.17.0-dev.63"
   datahub_codegen:
     dependency: "direct dev"
     description:
       name: datahub_codegen
-      sha256: "45791a81e93b9f100f2c08cd2e106b50024c9518047dfa13ff76e92d3ead11c2"
+      sha256: "6b9889af3901e9b6d1ee7154d92fc3db0a398e7eb91bbe5415cb5ca3c5516972"
       url: "https://pub.dev"
     source: hosted
-    version: "0.17.0-dev.18"
+    version: "0.17.0-dev.19"
   file:
     dependency: transitive
     description:

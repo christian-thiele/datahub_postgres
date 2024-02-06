@@ -320,7 +320,8 @@ class PostgresqlStringArrayDataType
 
   @override
   ParamSql toPostgresValue(DataField? field, List<dynamic>? data) {
-    final sanitized = data?.map((e) => e is Enum ? e.name : e.toString()).toList();
+    final sanitized =
+        data?.map((e) => e is Enum ? e.name : e.toString()).toList();
     return ParamSql.param(sanitized, PostgreSQLDataType.unknownType);
   }
 }
