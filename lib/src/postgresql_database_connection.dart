@@ -13,8 +13,7 @@ class PostgreSQLDatabaseConnection extends DatabaseConnection {
   final postgres.PostgreSQLConnection _connection;
 
   PostgreSQLDatabaseConnection(
-      PostgreSQLDatabaseAdapter adapter, this._connection)
-      : super(adapter);
+      PostgreSQLDatabaseAdapter super.adapter, this._connection);
 
   @override
   bool get isOpen => !_connection.isClosed;
@@ -47,11 +46,15 @@ class PostgreSQLDatabaseConnection extends DatabaseConnection {
           .catchError(
               (e, stack) => completer.complete(_Box<T>.error(e, stack)));
     }, (error, stack) {
-      resolve<LogService?>()?.warn(
-        'Unhandled error in postgres package.',
-        error: error,
-        trace: stack,
-      );
+      if (!completer.isCompleted) {
+        completer.complete(_Box<T>.error(error, stack));
+      } else {
+        resolve<LogService?>()?.warn(
+          'Unhandled error in postgres package.',
+          error: error,
+          trace: stack,
+        );
+      }
     }, zoneValues: {
       #postgresTransactionConnection: _connection,
       #postgresTransactionContext: contextCompleter

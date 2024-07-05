@@ -1,8 +1,6 @@
-import 'dart:typed_data';
 
 import 'package:datahub/datahub.dart';
 
-import 'custom_enum.dart';
 
 part 'double_array.g.dart';
 
