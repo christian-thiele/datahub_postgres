@@ -146,6 +146,11 @@ class _TestObjectDataBeanImpl extends PrimaryKeyDataBean<TestObject, int> {
   ];
 
   @override
+  late final reactivePartitions = [
+    id,
+  ];
+
+  @override
   Map<DataField, dynamic> unmap(TestObject dao,
       {bool includePrimaryKey = false}) {
     return {
@@ -193,4 +198,8 @@ abstract class _Dao extends PrimaryKeyDao<TestObject, int> {
 
   @override
   int getPrimaryKey() => (this as TestObject).id;
+
+  @override
+  TestObject copyWithPrimaryKey(int value) =>
+      (this as TestObject).copyWith(id: value);
 }

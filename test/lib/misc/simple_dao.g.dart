@@ -96,6 +96,11 @@ class _SimpleDataBeanImpl extends PrimaryKeyDataBean<Simple, int> {
   ];
 
   @override
+  late final reactivePartitions = [
+    id,
+  ];
+
+  @override
   Map<DataField, dynamic> unmap(Simple dao, {bool includePrimaryKey = false}) {
     return {
       if (includePrimaryKey) id: dao.id,
@@ -130,4 +135,7 @@ abstract class _Dao extends PrimaryKeyDao<Simple, int> {
 
   @override
   int getPrimaryKey() => (this as Simple).id;
+
+  @override
+  Simple copyWithPrimaryKey(int value) => (this as Simple).copyWith(id: value);
 }

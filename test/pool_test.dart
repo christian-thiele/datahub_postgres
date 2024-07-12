@@ -16,58 +16,62 @@ void main() {
     'test/config.yaml'
   ], config: {
     'maxConnectionLifetime': 10,
-  });
+  }).declare((host) {
+    group('Test Schema', () {
+      host.test(
+        'Pool behavior (PostgreSQL)',
+        () async {
+          final article = ArticleDao(
+            userId: 1,
+            blogKey: 'abc',
+            content: 'abc123',
+            createdTimestamp: DateTime.now(),
+            image: Uint8List(0),
+            lastEditTimestamp: DateTime.now(),
+            title: 'Test',
+          );
 
-  group('Test Schema', () {
-    test('Pool behavior (PostgreSQL)', host.test(() async {
-      final article = ArticleDao(
-        userId: 1,
-        blogKey: 'abc',
-        content: 'abc123',
-        createdTimestamp: DateTime.now(),
-        image: Uint8List(0),
-        lastEditTimestamp: DateTime.now(),
-        title: 'Test',
-      );
+          final repo = resolve<CRUDRepository<ArticleDao, int>>();
+          final adapter = resolve<DatabaseAdapter>();
+          expect(adapter.poolAvailable, 3);
+          expect(adapter.poolSize, 3);
 
-      final repo = resolve<CRUDRepository<ArticleDao, int>>();
-      final adapter = resolve<DatabaseAdapter>();
-      expect(adapter.poolAvailable, 3);
-      expect(adapter.poolSize, 3);
+          Future<void> somethingStupid() async {
+            await repo.transaction((context) async {
+              print('Blocking transaction.');
+              expect(adapter.poolAvailable, 1);
+              await Future.delayed(const Duration(seconds: 5));
+            });
+            print('Released transaction.');
+            expect(adapter.poolAvailable, 3);
+          }
 
-      Future<void> somethingStupid() async {
-        await repo.transaction((context) async {
-          print('Blocking transaction.');
-          expect(adapter.poolAvailable, 1);
-          await Future.delayed(const Duration(seconds: 5));
-        });
-        print('Released transaction.');
-        expect(adapter.poolAvailable, 3);
-      }
+          final future = somethingStupid();
 
-      final future = somethingStupid();
+          final id = await repo.create(article);
+          print('Created with id $id');
+          final results = await repo.getAll();
+          expect(results.length, greaterThan(0));
 
-      final id = await repo.create(article);
-      print('Created with id $id');
-      final results = await repo.getAll();
-      expect(results.length, greaterThan(0));
-
-      expect(adapter.poolAvailable, 2);
-      await future;
-
-      await Future.delayed(const Duration(seconds: 10));
-
-      expect(adapter.poolAvailable, 3);
-      await repo.transaction((context) async {
-        print((await repo.first())!.id);
-        expect(adapter.poolAvailable, 2);
-        await repo.transaction((context) async {
-          print((await repo.first())!.id);
           expect(adapter.poolAvailable, 2);
-        });
-      });
+          await future;
 
-      expect(adapter.poolAvailable, 3);
-    }), timeout: Timeout.none);
+          await Future.delayed(const Duration(seconds: 10));
+
+          expect(adapter.poolAvailable, 3);
+          await repo.transaction((context) async {
+            print((await repo.first())!.id);
+            expect(adapter.poolAvailable, 2);
+            await repo.transaction((context) async {
+              print((await repo.first())!.id);
+              expect(adapter.poolAvailable, 2);
+            });
+          });
+
+          expect(adapter.poolAvailable, 3);
+        },
+        timeout: Timeout.none,
+      );
+    });
   });
 }

@@ -1,7 +1,6 @@
 import 'package:datahub/datahub.dart';
 import 'package:datahub_postgres/postgis.dart';
 
-
 part 'text_entry.g.dart';
 
 @DaoType()

@@ -15,6 +15,9 @@ class TableDataBean extends DataBean<void> {
 
   @override
   void mapValues(Map<String, dynamic> data) {}
+
+  @override
+  List<DataField<DataType>> get reactivePartitions => [];
 }
 
 enum TestEnum { something, test }

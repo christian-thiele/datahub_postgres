@@ -56,6 +56,11 @@ class _EnumArrayDataBeanImpl extends PrimaryKeyDataBean<EnumArray, int> {
   ];
 
   @override
+  late final reactivePartitions = [
+    id,
+  ];
+
+  @override
   Map<DataField, dynamic> unmap(EnumArray dao,
       {bool includePrimaryKey = false}) {
     return {
@@ -84,4 +89,8 @@ abstract class _Dao extends PrimaryKeyDao<EnumArray, int> {
 
   @override
   int getPrimaryKey() => (this as EnumArray).id;
+
+  @override
+  EnumArray copyWithPrimaryKey(int value) =>
+      (this as EnumArray).copyWith(id: value);
 }

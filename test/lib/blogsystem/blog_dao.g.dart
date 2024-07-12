@@ -66,6 +66,11 @@ class _BlogDaoDataBeanImpl extends PrimaryKeyDataBean<BlogDao, String> {
   ];
 
   @override
+  late final reactivePartitions = [
+    key,
+  ];
+
+  @override
   Map<DataField, dynamic> unmap(BlogDao dao, {bool includePrimaryKey = false}) {
     return {
       if (includePrimaryKey) key: dao.key,
@@ -94,4 +99,8 @@ abstract class _Dao extends PrimaryKeyDao<BlogDao, String> {
 
   @override
   String getPrimaryKey() => (this as BlogDao).key;
+
+  @override
+  BlogDao copyWithPrimaryKey(String value) =>
+      (this as BlogDao).copyWith(key: value);
 }

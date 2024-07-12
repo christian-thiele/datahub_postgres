@@ -56,6 +56,11 @@ class _DoubleArrayDataBeanImpl extends PrimaryKeyDataBean<DoubleArray, int> {
   ];
 
   @override
+  late final reactivePartitions = [
+    id,
+  ];
+
+  @override
   Map<DataField, dynamic> unmap(DoubleArray dao,
       {bool includePrimaryKey = false}) {
     return {
@@ -83,4 +88,8 @@ abstract class _Dao extends PrimaryKeyDao<DoubleArray, int> {
 
   @override
   int getPrimaryKey() => (this as DoubleArray).id;
+
+  @override
+  DoubleArray copyWithPrimaryKey(int value) =>
+      (this as DoubleArray).copyWith(id: value);
 }

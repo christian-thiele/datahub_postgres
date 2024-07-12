@@ -12,8 +12,6 @@ import 'postgresql_database_migrator.dart';
 import 'sql/sql.dart';
 import 'sql_context.dart';
 
-//TODO factor out postgreSQL related code to separate package
-
 const metaTable = '_datahub_meta';
 
 /// [DatabaseAdapter] implementation for PostgreSQL databases.
@@ -54,15 +52,33 @@ class PostgreSQLDatabaseAdapter
   @override
   final typeRegistry = <PostgresqlDataType>{};
 
+  late final CounterMetric? _connectionCreatedMetric;
+  late final GaugeMetric? _schemaVersionMetric;
+
   PostgreSQLDatabaseAdapter(super.path, super.schema,
       {List<PostgresqlDataType> types = const []}) {
     typeRegistry.addAll(types);
+
     typeRegistry.addAll(defaultDataTypes);
   }
 
   @override
   Future<void> initialize() async {
+    final instrumentation = resolve<InstrumentationService?>();
+    if (enableMetrics && instrumentation != null) {
+      _connectionCreatedMetric = instrumentation.counter(
+        '${metricPrefix}_connections_created_total',
+      );
+      _schemaVersionMetric = instrumentation.gauge(
+        '${metricPrefix}_schema_version',
+      );
+    } else {
+      _connectionCreatedMetric = null;
+      _schemaVersionMetric = null;
+    }
+
     await super.initialize();
+
     await useConnection((connection) async {
       await connection.runTransaction((context) async {
         if (await _schemaExists(context)) {
@@ -82,6 +98,7 @@ class PostgreSQLDatabaseAdapter
           }
 
           final version = int.parse(versionString);
+          _schemaVersionMetric?.set(version);
           if (version != schema.version) {
             if (ignoreMigration) {
               throw PersistenceException(
@@ -96,6 +113,7 @@ class PostgreSQLDatabaseAdapter
             await schema.migrate(migrator, version);
             await context.setMetaValue(
                 schemaVersionKey, schema.version.toString());
+            _schemaVersionMetric?.set(schema.version);
           }
         } else {
           if (ignoreMigration) {
@@ -120,6 +138,8 @@ class PostgreSQLDatabaseAdapter
             await context.execute(
                 CreateTableBuilder.fromLayout(this, schema, layout).buildSql());
           }
+
+          _schemaVersionMetric?.set(schema.version);
         }
       });
     });
@@ -140,6 +160,7 @@ class PostgreSQLDatabaseAdapter
       isUnixSocket: isUnixSocket,
     );
     await connection.open();
+    _connectionCreatedMetric?.inc();
 
     return PostgreSQLDatabaseConnection(this, connection);
   }

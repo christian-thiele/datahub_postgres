@@ -1,6 +1,4 @@
-
 import 'package:datahub/datahub.dart';
-
 
 part 'int_array.g.dart';
 

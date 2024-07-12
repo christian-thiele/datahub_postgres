@@ -8,7 +8,7 @@ import 'lib/custom_field/custom_field_schema.dart';
 import 'lib/custom_field/text_entry.dart';
 
 void main() {
-  final host = TestHost(
+  TestHost(
     [
       () => PostgreSQLDatabaseAdapter(
             'postgres',
@@ -20,15 +20,19 @@ void main() {
       () => CRUDRepository('postgres', TextEntryDataBean),
     ],
     args: ['test/config.yaml'],
-  );
-
-  group('Persistence', () {
-    test('Repository (PostgreSQL)', host.test(() async {
-      final repo = resolve<CRUDRepository<TextEntry, int>>();
-      final thingy = await repo.getAll();
-      for (var element in thingy) {
-        print(element.position);
-      }
-    }), timeout: Timeout.none);
+  ).declare((host) {
+    group('Persistence', () {
+      host.test(
+        'Repository (PostgreSQL)',
+        () async {
+          final repo = resolve<CRUDRepository<TextEntry, int>>();
+          final thingy = await repo.getAll();
+          for (var element in thingy) {
+            print(element.position);
+          }
+        },
+        timeout: Timeout.none,
+      );
+    });
   });
 }

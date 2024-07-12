@@ -56,6 +56,11 @@ class _BoolArrayDataBeanImpl extends PrimaryKeyDataBean<BoolArray, int> {
   ];
 
   @override
+  late final reactivePartitions = [
+    id,
+  ];
+
+  @override
   Map<DataField, dynamic> unmap(BoolArray dao,
       {bool includePrimaryKey = false}) {
     return {
@@ -83,4 +88,8 @@ abstract class _Dao extends PrimaryKeyDao<BoolArray, int> {
 
   @override
   int getPrimaryKey() => (this as BoolArray).id;
+
+  @override
+  BoolArray copyWithPrimaryKey(int value) =>
+      (this as BoolArray).copyWith(id: value);
 }
