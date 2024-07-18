@@ -205,10 +205,10 @@ packages:
     dependency: "direct main"
     description:
       name: datahub
-      sha256: "1f42ad9de39f9d59d76119e2483d652059601efc7c9b34d45826e9826e7451df"
+      sha256: "6e1c3f5a930e54f7925a2bf3393092b913c91b4a5b7ce78d86a61c94c630b790"
       url: "https://pub.dev"
     source: hosted
-    version: "0.17.0-dev.88"
+    version: "0.17.0-dev.94"
   datahub_codegen:
     dependency: "direct dev"
     description:
@@ -249,6 +249,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  googleapis_auth:
+    dependency: transitive
+    description:
+      name: googleapis_auth
+      sha256: af7c3a3edf9d0de2e1e0a77e994fae0a581c525fa7012af4fa0d4a52ed9484da
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.1"
   graphs:
     dependency: transitive
     description:
@@ -257,6 +265,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
+  grpc:
+    dependency: transitive
+    description:
+      name: grpc
+      sha256: "7b2bee509ea2750028fe15f5a530bdc8664e7e62e97abf0bb7b0fc65b6d7d2b3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
   http:
     dependency: transitive
     description:
@@ -433,6 +449,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.3"
+  protobuf:
+    dependency: transitive
+    description:
+      name: protobuf
+      sha256: "68645b24e0716782e58948f8467fd42a880f255096a821f9e7d0ec625b00c84d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
   pub_semver:
     dependency: transitive
     description:

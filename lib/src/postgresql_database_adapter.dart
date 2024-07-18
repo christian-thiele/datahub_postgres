@@ -64,12 +64,12 @@ class PostgreSQLDatabaseAdapter
 
   @override
   Future<void> initialize() async {
-    final instrumentation = resolve<InstrumentationService?>();
-    if (enableMetrics && instrumentation != null) {
-      _connectionCreatedMetric = instrumentation.counter(
+    final telemetry = resolve<TelemetryService?>();
+    if (enableMetrics && telemetry != null) {
+      _connectionCreatedMetric = telemetry.counter(
         '${metricPrefix}_connections_created_total',
       );
-      _schemaVersionMetric = instrumentation.gauge(
+      _schemaVersionMetric = telemetry.gauge(
         '${metricPrefix}_schema_version',
       );
     } else {
