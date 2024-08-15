@@ -50,7 +50,7 @@ class PostgreSQLDatabaseConnection extends DatabaseConnection {
         completer.complete(_Box<T>.error(error, stack));
       } else {
         resolve<LogService?>()?.warn(
-          'Unhandled error in postgres package.',
+          'Unhandled error in postgres transaction.',
           error: error,
           trace: stack,
         );
