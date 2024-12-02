@@ -260,7 +260,7 @@ mixin SqlContext {
       sql.add(expression.arguments.map(expressionSql).joinSql(', ')..wrap());
       return sql;
     } else if (expression is SqlExpression) {
-      return expression;
+      return expression.clone();
     } else if (expression is CustomOperatorExpression) {
       final sql = expressionSql(expression.left);
       sql.add(SqlExpression(expression.operatorSql));

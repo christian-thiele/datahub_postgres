@@ -59,6 +59,8 @@ class ParamSql {
   void addParam(dynamic value, PostgreSQLDataType type) {
     addSegment(SqlParamSegment(value, type));
   }
+
+  ParamSql clone() => ParamSql.ofSegments(segments.toList());
 }
 
 abstract class SqlSegment {}
