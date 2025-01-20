@@ -237,11 +237,12 @@ class PostgreSQLDatabaseContext implements DatabaseContext {
     final from =
         SelectFrom.fromQuerySource(_adapter, _adapter.schema.name, source);
     final builder = SelectBuilder(_adapter, from)
+      ..select(select)
+      ..distinct(distinct)
       ..where(filter)
       ..orderBy(sort)
       ..offset(offset)
       ..limit(limit)
-      ..select(select)
       ..groupBy(group)
       ..forUpdate(forUpdate);
     final results = await querySql(builder.buildSql());
